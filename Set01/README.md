@@ -9,6 +9,12 @@
       <summary>Answer</summary>
 
       C.
+      - Amazon Kinesis Data Streams: This service is designed for real-time data streaming. It captures and stores data streams, but it doesn't directly integrate with Amazon S3 or Amazon Redshift for data storage. To move data from Kinesis Data Streams to S3 or Redshift, you generally need an additional processing step, such as using AWS Lambda or Amazon Kinesis Data Firehose.
+      - Amazon Kinesis Data Firehose: It is designed to capture, transform, and load streaming data directly into AWS data stores like Amazon S3, Amazon Redshift, Amazon Elasticsearch Service, and Splunk. It can be used to deliver streaming data directly to Amazon S3 and from there to Amazon Redshift, often through a buffering and batching process, which makes it more suited for near real-time data processing rather than real-time.
+      - A. Amazon Kinesis Data Firehose to Amazon S3, Amazon Athena for querying, Amazon QuickSight for dashboard: This solution is viable for near real-time data streaming to S3, with Athena allowing SQL-like querying and QuickSight providing dashboard capabilities. However, there might be some latency in data availability and query response, especially for complex analytics.
+      - B. Amazon Kinesis Data Streams to Amazon Redshift, QuickSight for dashboard: This option would require an additional component (like AWS Lambda) to process and move data from Kinesis Data Streams to Redshift, but it would enable more real-time analysis and querying in Redshift, with QuickSight for dashboards.
+      - C. Amazon Kinesis Data Firehose to Amazon Redshift, QuickSight for dashboard: This solution allows for near real-time streaming of data directly into Redshift, which is ideal for complex SQL queries and analytics with minimal latency. QuickSight can then be used for effective data visualization and dashboarding. This option seems to meet all the requirements efficiently.
+      - D. Amazon Kinesis Data Streams to Amazon S3, Athena for querying, QuickSight for dashboard: Similar to option A, but requires an additional mechanism to move data from Kinesis Data Streams to S3.
 
    </details>
 
@@ -22,6 +28,10 @@
       <summary>Answer</summary>
 
       A.
+      - A. Using an Active Directory connector with SSO allows users to access Amazon QuickSight using their existing corporate credentials, which simplifies the login process and maintains security.
+      - B. This option secures data access but does not address the integration with on-premises Active Directory for user authentication.
+      - C. Like option B, it doesn't cover the integration with on-premises Active Directory.
+      - D. Tt doesn't specifically address the use of on-premises Active Directory for authentication, and QuickSight doesn't reside within a VPC or security group as it's a managed service.
 
    </details>
 
@@ -34,7 +44,11 @@
    <details>
       <summary>Answer</summary>
 
-      C.
+      B.
+      - A. This option doesn't change the fact that data is still stored on HDFS, which is tied to the EMR cluster's lifecycle.
+      - B. Storing data on EMR File System (EMRFS) instead of HDFS allows the data to be separated from the cluster lifecycle, as EMRFS uses Amazon S3. EMRFS consistent view ensures data consistency. Multiple master nodes in the EMR cluster improve availability.Storing data in S3 enhances data durability and availability. This option effectively addresses both high availability and durable storage.
+      - C. Running two separate EMR clusters in different AZs adds redundancy but might be overkill and cost-ineffective for high availability requirements.
+      - D. A read-replica cluster in a separate AZ adds read scalability and improves availability but also adds complexity and cost.
 
    </details>
 
@@ -47,7 +61,11 @@
    <details>
       <summary>Answer</summary>
 
-      B.
+      C.
+      - A. This method may not provide the real-time analysis capabilities, as there could be a delay in logs being available in S3 and then queried by Athena.
+      - B. This solution might be more complex to set up and manage.
+      - C. It provides a streamlined process for real-time data collection, analysis, and visualization using Kinesis Data Firehose, Amazon Elasticsearch Service, and Kibana. This setup should meet the requirements for real-time log analysis with minimal delay in displaying new information.
+      - D. This solution involves multiple services which might increase complexity and cost.
 
    </details>
 
@@ -61,6 +79,10 @@
       <summary>Answer</summary>
 
       B.
+      - A. Job bookmarks can help in efficiently processing only the new or changed data, reducing the total amount of data processed in subsequent runs. However, Job bookmarks are more about efficiently managing data processing rather than speeding up a currently running job.
+      - B. Job metrics provide insight into the job's performance and resource utilization, which is essential for optimization. Adjusting the maximum capacity parameter directly affects the number of DPUs allocated, potentially speeding up the job by increasing parallel processing power.
+      - C. This approach is only useful if the current bottleneck is related to memory overhead, not overall DPU or CPU capacity.
+      - D. Similar to option A, job bookmarks are not directly related to the immediate improvement of the running job’s performance.
 
    </details>
 
@@ -74,6 +96,10 @@
       <summary>Answer</summary>
 
       A.
+      - A. It involves copying data into a staging table and then using SQL commands to replace existing rows. This method allows for more control and precision in handling duplicates, particularly if there's a need to update existing records rather than just remove duplicates. However, it's also the most complex in terms of implementation.
+      - B. The upsert operation (inserting new records and updating existing ones) effectively prevents duplicates but this approach adds complexity by introducing another database (MySQL) into the workflow and it may not be the most efficient method, especially in terms of time and computational resources.
+      - C. Spark's dropDuplicates() is a straightforward way to remove duplicates directly within the AWS Glue job but it may not account for updates to existing records; it only removes exact duplicates.
+      - D. It may not effectively address the issue of duplicates unless combined with other methods.
 
    </details>
 
@@ -87,6 +113,10 @@
       <summary>Answer</summary>
 
       A.
+      - A. Amazon Athena performance can often degrade due to a large number of small files. Merging these into larger files can significantly improve query performance as Athena is optimized for fewer, larger files.
+      - B. Increasing shards can help if the bottleneck is due to the high throughput of data streams but if the issue is related to how the data is stored in S3 and accessed by Athena, adding more shards might not address the query performance degradation.
+      - C. This can be beneficial if the application is the bottleneck due to insufficient resources but if the streaming application is performing adequately in its write operations to S3, then adding more resources won’t necessarily improve Athena’s query performance.
+      - D. It’s unlikely to significantly impact Athena query performance unless the current bucket has some specific performance issues. Also, it complicates the data architecture.
 
    </details>
 
@@ -100,6 +130,10 @@
       <summary>Answer</summary>
 
       C.
+      - A. Increasing the memory could help if the master nodes are the bottleneck. Master nodes are responsible for cluster management tasks but not for query processing or data storage. Since the issue seems to be related to data nodes (given the JVMMemoryPressure errors and slow query performance), increasing memory on master nodes might not resolve the issue.
+      - B. This action is not typically a solution for performance issues.
+      - C. A high number of shards (1,000 in this case) relative to the data volume (1 TB daily) can lead to inefficiencies and performance issues. Each shard is an overhead, and too many shards can cause problems like increased memory usage and slower query performance. Reducing the number of shards can alleviate JVM memory pressure and improve overall cluster performance.
+      - D. Given the existing issue of too many shards, increasing them further would likely worsen performance and memory pressure issues.
 
    </details>
 
@@ -113,6 +147,10 @@
       <summary>Answer</summary>
 
       A.
+      - A. This approach effectively handles data archiving by moving older data to S3, which is more cost-effective than storing everything in Redshift. Redshift Spectrum allows querying data stored in S3 directly, providing seamless access to archived data.
+      - B. It doesn't address the long-term growth of data effectively, as it only provides a temporary increase in storage.
+      - C. Requires careful management of the partitioning scheme and ongoing maintenance.
+      - Introduces significant complexity in the data architecture and higher administrative effort in managing multiple services (EMR, Athena, Glue, S3).
 
    </details>
 
@@ -126,6 +164,10 @@
       <summary>Answer</summary>
 
       D.
+      - A. This solution doesn't address the core issue of the Glue crawler's infrequent updates. The data catalog might still be outdated if the crawler is not run soon after new data arrives.
+      - B. It might not align perfectly with the arrival of new data, as data is sent without a predefined schedule.
+      - C. It may not be practical or efficient, especially if new data doesn't arrive as frequently.
+      - D. This approach ensures that the data catalog is updated promptly after new data arrives, thus providing the most current data to the analysts. It aligns the crawler execution closely with the data arrival pattern, which is crucial in this scenario where the data ingestion schedule is not predefined.
 
      </details>
 
