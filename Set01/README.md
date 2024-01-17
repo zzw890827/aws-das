@@ -549,12 +549,256 @@
 
     </details>
 
-41. A developer is building a web application that uses Amazon API Gateway to expose an AWS Lambda function to process requests from clients. During testing, the developer notices that the API Gateway times out even though the Lambda function finishes under the set time limit. Which of the following API Gateway metrics in Amazon CloudWatch can help the developer troubleshoot the issue? (Choose two.)
-    - [ ] A. CacheHitCount
-    - [ ] B. IntegrationLatency
-    - [ ] C. CacheMissCount
-    - [ ] D. Latency
-    - [ ] E. Count
+41. A mortgage company has a microservice for accepting payments. This microservice uses the Amazon DynamoDB encryption client with AWS KMS managed keys to encrypt the sensitive data before writing the data to DynamoDB. The finance team should be able to load this data into Amazon Redshift and aggregate the values within the sensitive fields. The Amazon Redshift cluster is shared with other data analysts from different business units. Which steps should a data analyst take to accomplish this task efficiently and securely?
+    - [ ] A. Create an AWS Lambda function to process the DynamoDB stream. Decrypt the sensitive data using the same KMS key. Save the output to a restricted S3 bucket for the finance team. Create a finance table in Amazon Redshift that is accessible to the finance team only. Use the COPY command to load the data from Amazon S3 to the finance table.
+    - [ ] B. Create an AWS Lambda function to process the DynamoDB stream. Save the output to a restricted S3 bucket for the finance team. Create a finance table in Amazon Redshift that is accessible to the finance team only. Use the COPY command with the IAM role that has access to the KMS key to load the data from S3 to the finance table.
+    - [ ] C. Create an Amazon EMR cluster with an EMR_EC2_DefaultRole role that has access to the KMS key. Create Apache Hive tables that reference the data stored in DynamoDB and the finance table in Amazon Redshift. In Hive, select the data from DynamoDB and then insert the output to the finance table in Amazon Redshift.
+    - [ ] D. Create an Amazon EMR cluster. Create Apache Hive tables that reference the data stored in DynamoDB. Insert the output to the restricted Amazon S3 bucket for the finance team. Use the COPY command with the IAM role that has access to the KMS key to load the data from Amazon S3 to the finance table in Amazon Redshift.
+
+    <details>
+       <summary>Answer</summary>
+
+       - Option A: This approach involves creating an AWS Lambda function to process the DynamoDB stream and decrypt the sensitive data using the same AWS KMS key. The decrypted data is then saved to a restricted Amazon S3 bucket accessible only by the finance team. A dedicated finance table in Amazon Redshift, which only the finance team can access, is used to load the data from the S3 bucket using the COPY command. This option ensures that decryption and data transfer are securely handled, and access is restricted to the finance team.
+       - Option B: Similar to Option A, this option also uses an AWS Lambda function to process the DynamoDB stream. However, it doesn't specify the decryption step, which is crucial since the data in DynamoDB is encrypted. The data is stored in a restricted S3 bucket, and a finance table in Amazon Redshift is used for loading the data. The COPY command utilizes an IAM role with access to the KMS key. The lack of explicit decryption step is a concern here.
+       - Option C: This option proposes using an Amazon EMR cluster with an EMR_EC2_DefaultRole that has access to the KMS key. It involves creating Apache Hive tables to reference the data in DynamoDB and the finance table in Redshift. Data is selected from DynamoDB using Hive and then inserted into the finance table in Redshift. While this method could handle decryption, it introduces additional complexity and costs with the EMR cluster and might not be as straightforward as Lambda for processing streams.
+       - Option D: This option also suggests using an Amazon EMR cluster, but it doesn't specify access to the KMS key in the role, which is necessary for decryption. It involves using Apache Hive tables to reference DynamoDB data and inserting the output into a restricted S3 bucket for the finance team. The data is then loaded into Redshift using the COPY command with an IAM role that has KMS access. Like Option C, it adds unnecessary complexity and lacks clarity on decryption.
+       - Based on these evaluations, Option A seems to be the most suitable. It clearly outlines the decryption of data, secure storage in S3, and restricted access to the data in Amazon Redshift, ensuring both efficiency and security in line with AWS best practices.
+
+    </details>
+
+42. A company is building a data lake and needs to ingest data from a relational database that has time-series data. The company wants to use managed services to accomplish this. The process needs to be scheduled daily and bring incremental data only from the source into Amazon S3. What is the MOST cost-effective approach to meet these requirements?
+    - [ ] A. Use AWS Glue to connect to the data source using JDBC Drivers. Ingest incremental records only using job bookmarks.
+    - [ ] B. Use AWS Glue to connect to the data source using JDBC Drivers. Store the last updated key in an Amazon DynamoDB table and ingest the data using the updated key as a filter.
+    - [ ] C. Use AWS Glue to connect to the data source using JDBC Drivers and ingest the entire dataset. Use appropriate Apache Spark libraries to compare the dataset, and find the delta.
+    - [ ] D. Use AWS Glue to connect to the data source using JDBC Drivers and ingest the full data. Use AWS DataSync to ensure the delta only is written into Amazon S3.
+
+    <details>
+       <summary>Answer</summary>
+
+       A.
+
+    </details>
+
+43. An Amazon Redshift database contains sensitive user data. Logging is necessary to meet compliance requirements. The logs must contain database authentication attempts, connections, and disconnections. The logs must also contain each query run against the database and record which database user ran each query. Which steps will create the required logs?
+    - [ ] A. Enable Amazon Redshift Enhanced VPC Routing. Enable VPC Flow Logs to monitor traffic.
+    - [ ] B. Allow access to the Amazon Redshift database using AWS IAM only. Log access using AWS CloudTrail.
+    - [ ] C. Enable audit logging for Amazon Redshift using the AWS Management Console or the AWS CLI.
+    - [ ] D. Enable and download audit reports from AWS Artifact.
+
+    <details>
+       <summary>Answer</summary>
+
+       C.
+
+    </details>
+
+44. A company that monitors weather conditions from remote construction sites is setting up a solution to collect temperature data from the following two weather stations. ✑ Station A, which has 10 sensors ✑ Station B, which has five sensors These weather stations were placed by onsite subject-matter experts. Each sensor has a unique ID. The data collected from each sensor will be collected using Amazon Kinesis Data Streams. Based on the total incoming and outgoing data throughput, a single Amazon Kinesis data stream with two shards is created. Two partition keys are created based on the station names. During testing, there is a bottleneck on data coming from Station A, but not from Station B. Upon review, it is confirmed that the total stream throughput is still less than the allocated Kinesis Data Streams throughput. How can this bottleneck be resolved without increasing the overall cost and complexity of the solution, while retaining the data collection quality requirements?
+    - [ ] A. Increase the number of shards in Kinesis Data Streams to increase the level of parallelism.
+    - [ ] B. Create a separate Kinesis data stream for Station A with two shards, and stream Station A sensor data to the new stream.
+    - [ ] C. Modify the partition key to use the sensor ID instead of the station name.
+    - [ ] D. Reduce the number of sensors in Station A from 10 to 5 sensors.
+
+    <details>
+       <summary>Answer</summary>
+
+       C.
+
+    </details>
+
+45. Once a month, a company receives a 100 MB .csv file compressed with gzip. The file contains 50,000 property listing records and is stored in Amazon S3 Glacier. The company needs its data analyst to query a subset of the data for a specific vendor. What is the most cost-effective solution?
+    - [ ] A. Load the data into Amazon S3 and query it with Amazon S3 Select.
+    - [ ] B. Query the data from Amazon S3 Glacier directly with Amazon Glacier Select.
+    - [ ] C. Load the data to Amazon S3 and query it with Amazon Athena.
+    - [ ] D. Load the data to Amazon S3 and query it with Amazon Redshift Spectrum.
+
+    <details>
+       <summary>Answer</summary>
+
+       A.
+
+    </details>
+
+46. A retail company is building its data warehouse solution using Amazon Redshift. As a part of that effort, the company is loading hundreds of files into the fact table created in its Amazon Redshift cluster. The company wants the solution to achieve the highest throughput and optimally use cluster resources when loading data into the company's fact table. How should the company meet these requirements?
+    - [ ] A. Use multiple COPY commands to load the data into the Amazon Redshift cluster.
+    - [ ] B. Use S3DistCp to load multiple files into the Hadoop Distributed File System (HDFS) and use an HDFS connector to ingest the data into the Amazon Redshift cluster.
+    - [ ] C. Use LOAD commands equal to the number of Amazon Redshift cluster nodes and load the data in parallel into each node.
+    - [ ] D. Use a single COPY command to load the data into the Amazon Redshift cluster.
+
+    <details>
+       <summary>Answer</summary>
+
+       D.
+
+    </details>
+
+47. A data analyst is designing a solution to interactively query datasets with SQL using a JDBC connection. Users will join data stored in Amazon S3 in Apache ORC format with data stored in Amazon Elasticsearch Service (Amazon ES) and Amazon Aurora MySQL. Which solution will provide the MOST up-to-date results?
+    - [ ] A. Use AWS Glue jobs to ETL data from Amazon ES and Aurora MySQL to Amazon S3. Query the data with Amazon Athena.
+    - [ ] B. Use Amazon DMS to stream data from Amazon ES and Aurora MySQL to Amazon Redshift. Query the data with Amazon Redshift.
+    - [ ] C. Query all the datasets in place with Apache Spark SQL running on an AWS Glue developer endpoint.
+    - [ ] D. Query all the datasets in place with Apache Presto running on Amazon EMR.
+
+    <details>
+       <summary>Answer</summary>
+
+       - A. AWS Glue ETL with Amazon Athena: AWS Glue can be used to extract, transform, and load (ETL) data from Amazon Elasticsearch Service and Aurora MySQL to Amazon S3. Amazon Athena can then be used to query this data. However, the ETL process in AWS Glue might introduce some latency, depending on the ETL job schedule. This could mean the data in S3 is not the most current compared to the source systems.
+       - B. Amazon DMS with Amazon Redshift: Amazon Database Migration Service (DMS) can continuously replicate data from source databases (like Aurora MySQL) to a target like Amazon Redshift. However, DMS doesn't natively support Amazon Elasticsearch Service as a source, which is a key requirement here. While Redshift provides powerful querying capabilities, the limitation with Elasticsearch integration makes this option less suitable.
+       - C. Apache Spark SQL on AWS Glue Developer Endpoint: Apache Spark SQL can query data across different data stores. Running Spark SQL on an AWS Glue developer endpoint allows querying data in place without moving it, ensuring you're working with the most current data. However, querying data directly in Amazon ES and Aurora MySQL might require additional connectors or integrations.
+       - D. Apache Presto on Amazon EMR: Apache Presto is designed for querying data across multiple sources interactively. Running Presto on Amazon EMR would allow querying data in Amazon S3, Amazon Elasticsearch Service, and Amazon Aurora MySQL directly, without ETL processes, ensuring real-time access to the latest data. Presto is well-suited for this kind of federated query across different data stores.
+       - Given these considerations, Option D (Apache Presto running on Amazon EMR) seems to be the most suitable for providing the most up-to-date results. It allows for interactive querying across all the mentioned data stores without the need for ETL processes, thereby ensuring that the queries are performed on the most current data available.
+
+    </details>
+
+48. A company developed a new elections reporting website that uses Amazon Kinesis Data Firehose to deliver full logs from AWS WAF to an Amazon S3 bucket. The company is now seeking a low-cost option to perform this infrequent data analysis with visualizations of logs in a way that requires minimal development effort. Which solution meets these requirements?
+    - [ ] A. Use an AWS Glue crawler to create and update a table in the Glue data catalog from the logs. Use Athena to perform ad-hoc analyses and use Amazon QuickSight to develop data visualizations.
+    - [ ] B. Create a second Kinesis Data Firehose delivery stream to deliver the log files to Amazon OpenSearch Service (Amazon Elasticsearch Service). Use Amazon ES to perform text-based searches of the logs for ad-hoc analyses and use OpenSearch Dashboards (Kibana) for data visualizations.
+    - [ ] C. Create an AWS Lambda function to convert the logs into .csv format. Then add the function to the Kinesis Data Firehose transformation configuration. Use Amazon Redshift to perform ad-hoc analyses of the logs using SQL queries and use Amazon QuickSight to develop data visualizations.
+    - [ ] D. Create an Amazon EMR cluster and use Amazon S3 as the data source. Create an Apache Spark job to perform ad-hoc analyses and use Amazon QuickSight to develop data visualizations.
+
+    <details>
+       <summary>Answer</summary>
+
+       A
+
+    </details>
+
+49. A large company has a central data lake to run analytics across different departments. Each department uses a separate AWS account and stores its data in an Amazon S3 bucket in that account. Each AWS account uses the AWS Glue Data Catalog as its data catalog. There are different data lake access requirements based on roles. Associate analysts should only have read access to their departmental data. Senior data analysts can have access in multiple departments including theirs, but for a subset of columns only. Which solution achieves these required access patterns to minimize costs and administrative tasks?
+    - [ ] A. Consolidate all AWS accounts into one account. Create different S3 buckets for each department and move all the data from every account to the central data lake account. Migrate the individual data catalogs into a central data catalog and apply fine-grained permissions to give to each user the required access to tables and databases in AWS Glue and Amazon S3.
+    - [ ] B. Keep the account structure and the individual AWS Glue catalogs on each account. Add a central data lake account and use AWS Glue to catalog data from various accounts. Configure cross-account access for AWS Glue crawlers to scan the data in each departmental S3 bucket to identify the schema and populate the catalog. Add the senior data analysts into the central account and apply highly detailed access controls in the Data Catalog and Amazon S3.
+    - [ ] C. Set up an individual AWS account for the central data lake. Use AWS Lake Formation to catalog the cross-account locations. On each individual S3 bucket, modify the bucket policy to grant S3 permissions to the Lake Formation service-linked role. Use Lake Formation permissions to add fine-grained access controls to allow senior analysts to view specific tables and columns.
+    - [ ] D. Set up an individual AWS account for the central data lake and configure a central S3 bucket. Use an AWS Lake Formation blueprint to move the data from the various buckets into the central S3 bucket. On each individual bucket, modify the bucket policy to grant S3 permissions to the Lake Formation service-linked role. Use Lake Formation permissions to add fine-grained access controls for both associate and senior analysts to view specific tables and columns.
+
+    <details>
+       <summary>Answer</summary>
+
+       C.
+
+    </details>
+
+50. A company wants to improve user satisfaction for its smart home system by adding more features to its recommendation engine. Each sensor asynchronously pushes its nested JSON data into Amazon Kinesis Data Streams using the Kinesis Producer Library (KPL) in Java. Statistics from a set of failed sensors showed that, when a sensor is malfunctioning, its recorded data is not always sent to the cloud. The company needs a solution that offers near-real-time analytics on the data from the most updated sensors. Which solution enables the company to meet these requirements?
+    - [ ] A. Set the RecordMaxBufferedTime property of the KPL to "גˆ’1" to disable the buffering on the sensor side. Use Kinesis Data Analytics to enrich the data based on a company-developed anomaly detection SQL script. Push the enriched data to a fleet of Kinesis data streams and enable the data transformation feature to flatten the JSON file. Instantiate a dense storage Amazon Redshift cluster and use it as the destination for the Kinesis Data Firehose delivery stream.
+    - [ ] B. Update the sensors code to use the PutRecord/PutRecords call from the Kinesis Data Streams API with the AWS SDK for Java. Use Kinesis Data Analytics to enrich the data based on a company-developed anomaly detection SQL script. Direct the output of KDA application to a Kinesis Data Firehose delivery stream, enable the data transformation feature to flatten the JSON file, and set the Kinesis Data Firehose destination to an Amazon OpenSearch Service (Amazon Elasticsearch Service) cluster.
+    - [ ] C. Set the RecordMaxBufferedTime property of the KPL to "0" to disable the buffering on the sensor side. Connect for each stream a dedicated Kinesis Data Firehose delivery stream and enable the data transformation feature to flatten the JSON file before sending it to an Amazon S3 bucket. Load the S3 data into an Amazon Redshift cluster.
+    - [ ] D. Update the sensors code to use the PutRecord/PutRecords call from the Kinesis Data Streams API with the AWS SDK for Java. Use AWS Glue to fetch and process data from the stream using the Kinesis Client Library (KCL). Instantiate an Amazon Elasticsearch Service cluster and use AWS Lambda to directly push data into it.
+
+    <details>
+       <summary>Answer</summary>
+
+       B.
+
+    </details>
+
+51. A global company has different sub-organizations, and each sub-organization sells its products and services in various countries. The company's senior leadership wants to quickly identify which sub-organization is the strongest performer in each country. All sales data is stored in Amazon S3 in Parquet format. Which approach can provide the visuals that senior leadership requested with the least amount of effort?
+    - [ ] A. Use Amazon QuickSight with Amazon Athena as the data source. Use heat maps as the visual type.
+    - [ ] B. Use Amazon QuickSight with Amazon S3 as the data source. Use heat maps as the visual type.
+    - [ ] C. Use Amazon QuickSight with Amazon Athena as the data source. Use pivot tables as the visual type.
+    - [ ] D. Use Amazon QuickSight with Amazon S3 as the data source. Use pivot tables as the visual type.
+
+    <details>
+       <summary>Answer</summary>
+
+       A.
+
+    </details>
+
+52. A company has 1 million scanned documents stored as image files in Amazon S3. The documents contain typewritten application forms with information including the applicant first name, applicant last name, application date, application type, and application text. The company has developed a machine learning algorithm to extract the metadata values from the scanned documents. The company wants to allow internal data analysts to analyze and find applications using the applicant name, application date, or application text. The original images should also be downloadable. Cost control is secondary to query performance. Which solution organizes the images and metadata to drive insights while meeting the requirements?
+    - [ ] A. For each image, use object tags to add the metadata. Use Amazon S3 Select to retrieve the files based on the applicant name and application date.
+    - [ ] B. Index the metadata and the Amazon S3 location of the image file in Amazon Elasticsearch Service. Allow the data analysts to use Kibana to submit queries to the Elasticsearch cluster.
+    - [ ] C. Store the metadata and the Amazon S3 location of the image file in an Amazon Redshift table. Allow the data analysts to run ad-hoc queries on the table.
+    - [ ] D. Store the metadata and the Amazon S3 location of the image files in an Apache Parquet file in Amazon S3, and define a table in the AWS Glue Data Catalog. Allow data analysts to use Amazon Athena to submit custom queries.
+
+    <details>
+       <summary>Answer</summary>
+
+       B.
+
+    </details>
+
+53. A mobile gaming company wants to capture data from its gaming app and make the data available for analysis immediately. The data record size will be approximately 20 KB. The company is concerned about achieving optimal throughput from each device. Additionally, the company wants to develop a data stream processing application with dedicated throughput for each consumer. Which solution would achieve this goal?
+    - [ ] A. Have the app call the PutRecords API to send data to Amazon Kinesis Data Streams. Use the enhanced fan-out feature while consuming the data.
+    - [ ] B. Have the app call the PutRecordBatch API to send data to Amazon Kinesis Data Firehose. Submit a support case to enable dedicated throughput on the account.
+    - [ ] C. Have the app use Amazon Kinesis Producer Library (KPL) to send data to Kinesis Data Firehose. Use the enhanced fan-out feature while consuming the data.
+    - [ ] D. Have the app call the PutRecords API to send data to Amazon Kinesis Data Streams. Host the stream-processing application on Amazon EC2 with Auto Scaling.
+
+    <details>
+       <summary>Answer</summary>
+
+       A.
+
+    </details>
+
+54. A marketing company wants to improve its reporting and business intelligence capabilities. During the planning phase, the company interviewed the relevant stakeholders and discovered that: ✑ The operations team reports are run hourly for the current month's data. ✑ The sales team wants to use multiple Amazon QuickSight dashboards to show a rolling view of the last 30 days based on several categories. The sales team also wants to view the data as soon as it reaches the reporting backend. ✑ The finance team's reports are run daily for last month's data and once a month for the last 24 months of data. Currently, there is 400 TB of data in the system with an expected additional 100 TB added every month. The company is looking for a solution that is as cost- effective as possible. Which solution meets the company's requirements?
+    - [ ] A. Store the last 24 months of data in Amazon Redshift. Configure Amazon QuickSight with Amazon Redshift as the data source.
+    - [ ] B. Store the last 2 months of data in Amazon Redshift and the rest of the months in Amazon S3. Set up an external schema and table for Amazon Redshift Spectrum. Configure Amazon QuickSight with Amazon Redshift as the data source.
+    - [ ] C. Store the last 24 months of data in Amazon S3 and query it using Amazon Redshift Spectrum. Configure Amazon QuickSight with Amazon Redshift Spectrum as the data source.
+    - [ ] D. Store the last 2 months of data in Amazon Redshift and the rest of the months in Amazon S3. Use a long-running Amazon EMR with Apache Spark cluster to query the data as needed. Configure Amazon QuickSight with Amazon EMR as the data source.
+
+    <details>
+       <summary>Answer</summary>
+
+       B.
+
+    </details>
+
+55. A media company wants to perform machine learning and analytics on the data residing in its Amazon S3 data lake. There are two data transformation requirements that will enable the consumers within the company to create reports: ✑ Daily transformations of 300 GB of data with different file formats landing in Amazon S3 at a scheduled time. ✑ One-time transformations of terabytes of archived data residing in the S3 data lake. Which combination of solutions cost-effectively meets the company's requirements for transforming the data? (Choose three.)
+    - [ ] A. For daily incoming data, use AWS Glue crawlers to scan and identify the schema.
+    - [ ] B. For daily incoming data, use Amazon Athena to scan and identify the schema.
+    - [ ] C. For daily incoming data, use Amazon Redshift to perform transformations.
+    - [ ] D. For daily incoming data, use AWS Glue workflows with AWS Glue jobs to perform transformations.
+    - [ ] E. For archived data, use Amazon EMR to perform data transformations.
+    - [ ] F. For archived data, use Amazon SageMaker to perform data transformations.
+
+    <details>
+       <summary>Answer</summary>
+
+       ADE.
+
+    </details>
+
+56. A hospital uses wearable medical sensor devices to collect data from patients. The hospital is architecting a near-real-time solution that can ingest the data securely at scale. The solution should also be able to remove the patient's protected health information (PHI) from the streaming data and store the data in durable storage. Which solution meets these requirements with the least operational overhead?
+    - [ ] A. Ingest the data using Amazon Kinesis Data Streams, which invokes an AWS Lambda function using Kinesis Client Library (KCL) to remove all PHI. Write the data in Amazon S3.
+    - [ ] B. Ingest the data using Amazon Kinesis Data Firehose to write the data to Amazon S3. Have Amazon S3 trigger an AWS Lambda function that parses the sensor data to remove all PHI in Amazon S3.
+    - [ ] C. Ingest the data using Amazon Kinesis Data Streams to write the data to Amazon S3. Have the data stream launch an AWS Lambda function that parses the sensor data and removes all PHI in Amazon S3.
+    - [ ] D. Ingest the data using Amazon Kinesis Data Firehose to write the data to Amazon S3. Implement a transformation AWS Lambda function that parses the sensor data to remove all PHI.
+
+    <details>
+       <summary>Answer</summary>
+
+       D.
+
+    </details>
+
+57. A company is migrating its existing on-premises ETL jobs to Amazon EMR. The code consists of a series of jobs written in Java. The company needs to reduce overhead for the system administrators without changing the underlying code. Due to the sensitivity of the data, compliance requires that the company use root device volume encryption on all nodes in the cluster. Corporate standards require that environments be provisioned though AWS CloudFormation when possible. Which solution satisfies these requirements?
+    - [ ] A. Install open-source Hadoop on Amazon EC2 instances with encrypted root device volumes. Configure the cluster in the CloudFormation template.
+    - [ ] B. Use a CloudFormation template to launch an EMR cluster. In the configuration section of the cluster, define a bootstrap action to enable TLS.
+    - [ ] C. Create a custom AMI with encrypted root device volumes. Configure Amazon EMR to use the custom AMI using the CustomAmild property in the CloudFormation template.
+    - [ ] D. Use a CloudFormation template to launch an EMR cluster. In the configuration section of the cluster, define a bootstrap action to encrypt the root device volume of every node.
+
+    <details>
+       <summary>Answer</summary>
+
+       C.
+
+    </details>
+
+58. A transportation company uses IoT sensors attached to trucks to collect vehicle data for its global delivery fleet. The company currently sends the sensor data in small .csv files to Amazon S3. The files are then loaded into a 10-node Amazon Redshift cluster with two slices per node and queried using both Amazon Athena and Amazon Redshift. The company wants to optimize the files to reduce the cost of querying and also improve the speed of data loading into the Amazon Redshift cluster. Which solution meets these requirements?
+    - [ ] A. Use AWS Glue to convert all the files from .csv to a single large Apache Parquet file. COPY the file into Amazon Redshift and query the file with Athena from Amazon S3.
+    - [ ] B. Use Amazon EMR to convert each .csv file to Apache Avro. COPY the files into Amazon Redshift and query the file with Athena from Amazon S3.
+    - [ ] C. Use AWS Glue to convert the files from .csv to a single large Apache ORC file. COPY the file into Amazon Redshift and query the file with Athena from Amazon S3.
+    - [ ] D. Use AWS Glue to convert the files from .csv to Apache Parquet to create 20 Parquet files. COPY the files into Amazon Redshift and query the files with Athena from Amazon S3.
+
+    <details>
+       <summary>Answer</summary>
+
+       D.
+
+    </details>
+
+59. An online retail company with millions of users around the globe wants to improve its ecommerce analytics capabilities. Currently, clickstream data is uploaded directly to Amazon S3 as compressed files. Several times each day, an application running on Amazon EC2 processes the data and makes search options and reports available for visualization by editors and marketers. The company wants to make website clicks and aggregated data available to editors and marketers in minutes to enable them to connect with users more effectively. Which options will help meet these requirements in the MOST efficient way? (Choose two.)
+    - [ ] A. Use Amazon Kinesis Data Firehose to upload compressed and batched clickstream records to Amazon Elasticsearch Service.
+    - [ ] B. Upload clickstream records to Amazon S3 as compressed files. Then use AWS Lambda to send data to Amazon Elasticsearch Service from Amazon S3.
+    - [ ] C. Use Amazon Elasticsearch Service deployed on Amazon EC2 to aggregate, filter, and process the data. Refresh content performance dashboards in near-real time.
+    - [ ] D. Use Kibana to aggregate, filter, and visualize the data stored in Amazon Elasticsearch Service. Refresh content performance dashboards in near-real time.
+    - [ ] E. Upload clickstream records from Amazon S3 to Amazon Kinesis Data Streams and use a Kinesis Data Streams consumer to send records to Amazon Elasticsearch Service.
 
     <details>
        <summary>Answer</summary>
@@ -563,77 +807,24 @@
 
     </details>
 
-42. A Developer is designing an AWS Lambda function that create temporary files that are less than 10 MB during execution. The temporary files will be accessed and modified multiple times during execution. The Developer has no need to save or retrieve these files in the future. Where should the temporary file be stored?
-    - [ ] A. the /tmp directory
-    - [ ] B. Amazon EFS
-    - [ ] C. Amazon EBS
-    - [ ] D. Amazon S3
+60. A company is streaming its high-volume billing data (100 MBps) to Amazon Kinesis Data Streams. A data analyst partitioned the data on account_id to ensure that all records belonging to an account go to the same Kinesis shard and order is maintained. While building a custom consumer using the Kinesis Java SDK, the data analyst notices that, sometimes, the messages arrive out of order for account_id. Upon further investigation, the data analyst discovers the messages that are out of order seem to be arriving from different shards for the same account_id and are seen when a stream resize runs. What is an explanation for this behavior and what is the solution?
+    - [ ] A. There are multiple shards in a stream and order needs to be maintained in the shard. The data analyst needs to make sure there is only a single shard in the stream and no stream resize runs.
+    - [ ] B. The hash key generation process for the records is not working correctly. The data analyst should generate an explicit hash key on the producer side so the records are directed to the appropriate shard accurately.
+    - [ ] C. The records are not being received by Kinesis Data Streams in order. The producer should use the PutRecords API call instead of the PutRecord API call with the SequenceNumberForOrdering parameter.
+    - [ ] D. The consumer is not processing the parent shard completely before processing the child shards after a stream resize. The data analyst should process the parent shard completely first before processing the child shards.
 
     <details>
        <summary>Answer</summary>
 
-       A.
+       D.
 
     </details>
 
-43. A developer is designing a serverless application with two AWS Lambda functions to process photos. One Lambda function stores objects in an Amazon S3 bucket and stores the associated metadata in an Amazon DynamoDB table. The other Lambda function fetches the objects from the S3 bucket by using the metadata from the DynamoDB table. Both Lambda functions use the same Python library to perform complex computations and are approaching the quota for the maximum size of zipped deployment packages. What should the developer do to reduce the size of the Lambda deployment packages with the LEAST operational overhead?
-    - [ ] A. Package each Python library in its own .zip file archive. Deploy each Lambda function with its own copy of the library.
-    - [ ] B. Create a Lambda layer with the required Python library. Use the Lambda layer in both Lambda functions.
-    - [ ] C. Combine the two Lambda functions into one Lambda function. Deploy the Lambda function as a single .zip file archive.
-    - [ ] D. Download the Python library to an S3 bucket. Program the Lambda functions to reference the object URLs.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-       Lambda layers are used to store the code dependencies, custom runtimes, configuration files etc. We create a .zip file archive that contains supplementary code or data.
-
-    </details>
-
-44. A developer is writing an AWS Lambda function. The developer wants to log key events that occur while the Lambda function runs. The developer wants to include a unique identifier to associate the events with a specific function invocation. The developer adds the following code to the Lambda function: Which solution will meet this requirement?
-
-    ```javascript
-    function handler (event, context) {
-
-    } 
-    ```
-
-    - [ ] A. Obtain the request identifier from the AWS request ID field in the context object. Configure the application to write logs to standard output.
-    - [ ] B. Obtain the request identifier from the AWS request ID field in the event object. Configure the application to write logs to a file.
-    - [ ] C. Obtain the request identifier from the AWS request ID field in the event object. Configure the application to write logs to standard output.
-    - [ ] D. Obtain the request identifier from the AWS request ID field in the context object. Configure the application to write logs to a file.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-       In AWS Lambda, each invocation has a unique identifier called the "request ID." This request ID is accessible through the context object and not the event object. So, let's break down the options:
-       - Option A: This aligns with how AWS Lambda works since Lambda captures logs written to standard output and sends them to Amazon CloudWatch Logs.
-       - Option B: suggests obtaining the request identifier from the AWS request ID field in the event object, but this is incorrect because the request ID is in the context object, not the event object.
-       - Option C: has the same flaw as Option B, suggesting obtaining the request ID from the event object.
-       - Option D: suggests obtaining the request ID from the context object but then writing logs to a file. Lambda functions log to CloudWatch by writing to standard output or standard error, not to files.
-
-    </details>
-
-45. An application uses an Amazon EC2 Auto Scaling group. A developer notices that EC2 instances are taking a long time to become available during scale-out events. The UserData script is taking a long time to run. The developer must implement a solution to decrease the time that elapses before an EC2 instance becomes available. The solution must make the most recent version of the application available at all times and must apply all available security updates. The solution also must minimize the number of images that are created. The images must be validated. Which combination of steps should the developer take to meet these requirements? (Choose two.)
-    - [ ] A. Use EC2 Image Builder to create an Amazon Machine Image (AMI). Install all the patches and agents that are needed to manage and run the application. Update the Auto Scaling group launch configuration to use the AMI.
-    - [ ] B. Use EC2 Image Builder to create an Amazon Machine Image (AMI). Install the latest version of the application and all the patches and agents that are needed to manage and run the application. Update the Auto Scaling group launch configuration to use the AMI.
-    - [ ] C. Set up AWS CodeDeploy to deploy the most recent version of the application at runtime.
-    - [ ] D. Set up AWS CodePipeline to deploy the most recent version of the application at runtime.
-    - [ ] E. Remove any commands that perform operating system patching from the UserData script.
-
-    <details>
-       <summary>Answer</summary>
-
-       BC.
-
-    </details>
-
-46. A developer is creating an AWS Lambda function that needs credentials to connect to an Amazon RDS for MySQL database. An Amazon S3 bucket currently stores the credentials. The developer needs to improve the existing solution by implementing credential rotation and secure storage. The developer also needs to provide integration with the Lambda function. Which solution should the developer use to store and retrieve the credentials with the LEAST management overhead?
-    - [ ] A. Store the credentials in AWS Systems Manager Parameter Store. Select the database that the parameter will access. Use the default AWS Key Management Service (AWS KMS) key to encrypt the parameter. Enable automatic rotation for the parameter. Use the parameter from Parameter Store on the Lambda function to connect to the database.
-    - [ ] B. Encrypt the credentials with the default AWS Key Management Service (AWS KMS) key. Store the credentials as environment variables for the Lambda function. Create a second Lambda function to generate new credentials and to rotate the credentials by updating the environment variables of the first Lambda function. Invoke the second Lambda function by using an Amazon EventBridge rule that runs on a schedule. Update the database to use the new credentials. On the first Lambda function, retrieve the credentials from the environment variables. Decrypt the credentials by using AWS KMS, Connect to the database.
-    - [ ] C. Store the credentials in AWS Secrets Manager. Set the secret type to Credentials for Amazon RDS database. Select the database that the secret will access. Use the default AWS Key Management Service (AWS KMS) key to encrypt the secret. Enable automatic rotation for the secret. Use the secret from Secrets Manager on the Lambda function to connect to the database.
-    - [ ] D. Encrypt the credentials by using AWS Key Management Service (AWS KMS). Store the credentials in an Amazon DynamoDB table. Create a second Lambda function to rotate the credentials. Invoke the second Lambda function by using an Amazon EventBridge rule that runs on a schedule. Update the DynamoDB table. Update the database to use the generated credentials. Retrieve the credentials from DynamoDB with the first Lambda function. Connect to the database.
+61. A media analytics company consumes a stream of social media posts. The posts are sent to an Amazon Kinesis data stream partitioned on user_id. An AWS Lambda function retrieves the records and validates the content before loading the posts into an Amazon Elasticsearch cluster. The validation process needs to receive the posts for a given user in the order they were received. A data analyst has noticed that, during peak hours, the social media platform posts take more than an hour to appear in the Elasticsearch cluster. What should the data analyst do reduce this latency?
+    - [ ] A. Migrate the validation process to Amazon Kinesis Data Firehose.
+    - [ ] B. Migrate the Lambda consumers from standard data stream iterators to an HTTP/2 stream consumer.
+    - [ ] C. Increase the number of shards in the stream.
+    - [ ] D. Configure multiple Lambda functions to process the stream.
 
     <details>
        <summary>Answer</summary>
@@ -642,33 +833,25 @@
 
     </details>
 
-47. A developer has written the following IAM policy to provide access to an Amazon S3 bucket: Which access does the policy allow regarding the s3:GetObject and s3:PutObject actions?
+62. A company launched a service that produces millions of messages every day and uses Amazon Kinesis Data Streams as the streaming service. The company uses the Kinesis SDK to write data to Kinesis Data Streams. A few months after launch, a data analyst found that write performance is significantly reduced. The data analyst investigated the metrics and determined that Kinesis is throttling the write requests. The data analyst wants to address this issue without significant changes to the architecture. Which actions should the data analyst take to resolve this issue? (Choose two.)
+    - [ ] A. Increase the Kinesis Data Streams retention period to reduce throttling.
+    - [ ] B. Replace the Kinesis API-based data ingestion mechanism with Kinesis Agent.
+    - [ ] C. Increase the number of shards in the stream using the UpdateShardCount API.
+    - [ ] D. Choose partition keys in a way that results in a uniform record distribution across shards.
+    - [ ] E. Customize the application code to include retry logic to improve performance.
 
-    ```json
-    {
-      "Version":  "2012-10-17",
-      "Statements": [
-         {
-            "Effect": "Allow",
-            "Action": [
-               "s3:GetObject",
-               "s3:PutObject"
-            ],
-            "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
-         },
-         {
-            "Effect": "Deny",
-            "Action": "s3:*",
-            "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
-         }
-      ]
-    }
-    ```
+    <details>
+       <summary>Answer</summary>
 
-    - [ ] A. Access on all buckets except the “DOC-EXAMPLE-BUCKET” bucket
-    - [ ] B. Access on all buckets that start with “DOC-EXAMPLE-BUCKET” except the “DOC-EXAMPLE-BUCKET/secrets” bucket
-    - [ ] C. Access on all objects in the “DOC-EXAMPLE-BUCKET” bucket along with access to all S3 actions for objects in the “DOC-EXAMPLE-BUCKET” bucket that start with “secrets”
-    - [ ] D. Access on all objects in the “DOC-EXAMPLE-BUCKET” bucket except on objects that start with “secrets”
+       CD.
+
+    </details>
+
+63. A smart home automation company must efficiently ingest and process messages from various connected devices and sensors. The majority of these messages are comprised of a large number of small files. These messages are ingested using Amazon Kinesis Data Streams and sent to Amazon S3 using a Kinesis data stream consumer application. The Amazon S3 message data is then passed through a processing pipeline built on Amazon EMR running scheduled PySpark jobs. The data platform team manages data processing and is concerned about the efficiency and cost of downstream data processing. They want to continue to use PySpark. Which solution improves the efficiency of the data processing jobs and is well architected?
+    - [ ] A. Send the sensor and devices data directly to a Kinesis Data Firehose delivery stream to send the data to Amazon S3 with Apache Parquet record format conversion enabled. Use Amazon EMR running PySpark to process the data in Amazon S3.
+    - [ ] B. Set up an AWS Lambda function with a Python runtime environment. Process individual Kinesis data stream messages from the connected devices and sensors using Lambda.
+    - [ ] C. Launch an Amazon Redshift cluster. Copy the collected data from Amazon S3 to Amazon Redshift and move the data processing jobs from Amazon EMR to Amazon Redshift.
+    - [ ] D. Set up AWS Glue Python jobs to merge the small data files in Amazon S3 into larger files and transform them to Apache Parquet format. Migrate the downstream PySpark jobs from Amazon EMR to AWS Glue.
 
     <details>
        <summary>Answer</summary>
@@ -677,53 +860,12 @@
 
     </details>
 
-48. A developer is creating a mobile app that calls a backend service by using an Amazon API Gateway REST API. For integration testing during the development phase, the developer wants to simulate different backend responses without invoking the backend service. Which solution will meet these requirements with the LEAST operational overhead?
-    - [ ] A. Create an AWS Lambda function. Use API Gateway proxy integration to return constant HTTP responses.
-    - [ ] B. Create an Amazon EC2 instance that serves the backend REST API by using an AWS CloudFormation template.
-    - [ ] C. Customize the API Gateway stage to select a response type based on the request.
-    - [ ] D. Use a request mapping template to select the mock integration response.
-
-    <details>
-       <summary>Answer</summary>
-
-       D.
-      API Gateway provides a feature called "Mock Integration" which allows you to return a specific response without invoking any backend service. By using request mapping templates, you can decide which mock response to return based on the incoming request.
-
-    </details>
-
-49. A developer is using an AWS Lambda function to generate avatars for profile pictures that are uploaded to an Amazon S3 bucket. The Lambda function is automatically invoked for profile pictures that are saved under the /original/ S3 prefix. The developer notices that some pictures cause the Lambda function to time out. The developer wants to implement a fallback mechanism by using another Lambda function that resizes the profile picture. Which solution will meet these requirements with the LEAST development effort?
-    - [ ] A. Set the image resize Lambda function as a destination of the avatar generator Lambda function for the events that fail processing.
-    - [ ] B. Create an Amazon Simple Queue Service (Amazon SQS) queue. Set the SQS queue as a destination with an on failure condition for the avatar generator Lambda function. Configure the image resize Lambda function to poll from the SQS queue.
-    - [ ] C. Create an AWS Step Functions state machine that invokes the avatar generator Lambda function and uses the image resize Lambda function as a fallback. Create an Amazon EventBridge rule that matches events from the S3 bucket to invoke the state machine.
-    - [ ] D. Create an Amazon Simple Notification Service (Amazon SNS) topic. Set the SNS topic as a destination with an on failure condition for the avatar generator Lambda function. Subscribe the image resize Lambda function to the SNS topic.
-
-    <details>
-       <summary>Answer</summary>
-
-       A:
-        Lambda destinations allow you to specify another AWS resource (like another Lambda function, SQS, SNS, etc.) to route the results of a Lambda function (success or failure). This approach allows for a direct connection between the primary Lambda function and the fallback function without the need for extra components or configurations.
-
-    </details>
-
-50. A developer needs to migrate an online retail application to AWS to handle an anticipated increase in traffic. The application currently runs on two servers: one server for the web application and another server for the database. The web server renders webpages and manages session state in memory. The database server hosts a MySQL database that contains order details. When traffic to the application is heavy, the memory usage for the web server approaches 100% and the application slows down considerably. The developer has found that most of the memory increase and performance decrease is related to the load of managing additional user sessions. For the web server migration, the developer will use Amazon EC2 instances with an Auto Scaling group behind an Application Load Balancer. Which additional set of changes should the developer make to the application to improve the application's performance?
-    - [ ] A. Use an EC2 instance to host the MySQL database. Store the session data and the application data in the MySQL database.
-    - [ ] B. Use Amazon ElastiCache for Memcached to store and manage the session data. Use an Amazon RDS for MySQL DB instance to store the application data.
-    - [ ] C. Use Amazon ElastiCache for Memcached to store and manage the session data and the application data.
-    - [ ] D. Use the EC2 instance store to manage the session data. Use an Amazon RDS for MySQL DB instance to store the application data.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-
-    </details>
-
-51. A company is using an AWS Lambda function to process records from an Amazon Kinesis data stream. The company recently observed slow processing of the records. A developer notices that the iterator age metric for the function is increasing and that the Lambda run duration is constantly above normal. Which actions should the developer take to increase the processing speed? (Choose two.)
-    - [ ] A. Increase the number of shards of the Kinesis data stream.
-    - [ ] B. Decrease the timeout of the Lambda function.
-    - [ ] C. Increase the memory that is allocated to the Lambda function.
-    - [ ] D. Decrease the number of shards of the Kinesis data stream.
-    - [ ] E. Increase the timeout of the Lambda function.
+64. A large financial company is running its ETL process. Part of this process is to move data from Amazon S3 into an Amazon Redshift cluster. The company wants to use the most cost-efficient method to load the dataset into Amazon Redshift. Which combination of steps would meet these requirements? (Choose two.)
+    - [ ] A. Use the COPY command with the manifest file to load data into Amazon Redshift.
+    - [ ] B. Use S3DistCp to load files into Amazon Redshift.
+    - [ ] C. Use temporary staging tables during the loading process.
+    - [ ] D. Use the UNLOAD command to upload data into Amazon Redshift.
+    - [ ] E. Use Amazon Redshift Spectrum to query files from Amazon S3.
 
     <details>
        <summary>Answer</summary>
@@ -732,280 +874,16 @@
 
     </details>
 
-52. A company needs to harden its container images before the images are in a running state. The company's application uses Amazon Elastic Container Registry (Amazon ECR) as an image registry. Amazon Elastic Kubernetes Service (Amazon EKS) for compute, and an AWS CodePipeline pipeline that orchestrates a continuous integration and continuous delivery (CI/CD) workflow. Dynamic application security testing occurs in the final stage of the pipeline after a new image is deployed to a development namespace in the EKS cluster. A developer needs to place an analysis stage before this deployment to analyze the container image earlier in the CI/CD pipeline. Which solution will meet these requirements with the MOST operational efficiency?
-    - [ ] A. Build the container image and run the docker scan command locally. Mitigate any findings before pushing changes to the source code repository. Write a pre-commit hook that enforces the use of this workflow before commit.
-    - [ ] B. Create a new CodePipeline stage that occurs after the container image is built. Configure ECR basic image scanning to scan on image push. Use an AWS Lambda function as the action provider. Configure the Lambda function to check the scan results and to fail the pipeline if there are findings.
-    - [ ] C. Create a new CodePipeline stage that occurs after source code has been retrieved from its repository. Run a security scanner on the latest revision of the source code. Fail the pipeline if there are findings.
-    - [ ] D. Add an action to the deployment stage of the pipeline so that the action occurs before the deployment to the EKS cluster. Configure ECR basic image scanning to scan on image push. Use an AWS Lambda function as the action provider. Configure the Lambda function to check the scan results and to fail the pipeline if there are findings.
+65. A university intends to use Amazon Kinesis Data Firehose to collect JSON-formatted batches of water quality readings in Amazon S3. The readings are from 50 sensors scattered across a local lake. Students will query the stored data using Amazon Athena to observe changes in a captured metric over time, such as water temperature or acidity. Interest has grown in the study, prompting the university to reconsider how data will be stored. Which data format and partitioning choices will MOST significantly reduce costs? (Choose two.)
+    - [ ] A. Store the data in Apache Avro format using Snappy compression.
+    - [ ] B. Partition the data by year, month, and day.
+    - [ ] C. Store the data in Apache ORC format using no compression.
+    - [ ] D. Store the data in Apache Parquet format using Snappy compression.
+    - [ ] E. Partition the data by sensor, year, month, and day.
 
     <details>
        <summary>Answer</summary>
 
-       B.
-
-    </details>
-
-53. A developer is testing a new file storage application that uses an Amazon CloudFront distribution to serve content from an Amazon S3 bucket. The distribution accesses the S3 bucket by using an origin access identity (OAI). The S3 bucket's permissions explicitly deny access to all other users. The application prompts users to authenticate on a login page and then uses signed cookies to allow users to access their personal storage directories. The developer has configured the distribution to use its default cache behavior with restricted viewer access and has set the origin to point to the S3 bucket. However, when the developer tries to navigate to the login page, the developer receives a 403 Forbidden error. The developer needs to implement a solution to allow unauthenticated access to the login page. The solution also must keep all private content secure. Which solution will meet these requirements?
-    - [ ] A. Add a second cache behavior to the distribution with the same origin as the default cache behavior. Set the path pattern for the second cache behavior to the path of the login page, and make viewer access unrestricted. Keep the default cache behavior’s settings unchanged.
-    - [ ] B. Add a second cache behavior to the distribution with the same origin as the default cache behavior. Set the path pattern for the second cache behavior to *, and make viewer access restricted. Change the default cache behavior's path pattern to the path of the login page, and make viewer access unrestricted.
-    - [ ] C. Add a second origin as a failover origin to the default cache behavior. Point the failover origin to the S3 bucket. Set the path pattern for the primary origin to * and make viewer access restricted. Set the path pattern for the failover origin to the path of the login page, and make viewer access unrestricted.
-    - [ ] D. Add a bucket policy to the S3 bucket to allow read access. Set the resource on the policy to the Amazon Resource Name (ARN) of the login page object in the S3 bucket. Add a CloudFront function to the default cache behavior to redirect unauthorized requests to the login page’s S3 URI.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-       The S3 bucket denies access to all users except the OAI associated with the CloudFront distribution.
-       1. Users authenticate through a login page.
-       2. After authentication, signed cookies allow access to personal storage directories.
-       3. Currently, there's a 403 Forbidden error when trying to access the login page, indicating it's not publicly accessible.
-       Given the options:
-       - A. This option involves creating a second cache behavior that matches the path of the login page and making viewer access unrestricted. This would mean that when CloudFront gets a request matching the login page's path, it would not require signed cookies, allowing public access to the login page. Meanwhile, the default cache behavior would handle all other paths and require signed cookies. This seems like a potential solution.
-       - B. Setting the path pattern of the second cache behavior to * and changing the default cache behavior's path pattern to the login page's path seems counterintuitive and may result in misconfiguration.
-       - C. CloudFront doesn't support the concept of a "failover origin" in the manner described in this option.
-       - D. The problem with this solution is that direct read access to the login page object in the S3 bucket bypasses CloudFront, which is not recommended as it might expose the S3 URL to the users. Additionally, redirecting unauthorized requests to the S3 URI may expose the S3 URL and cause potential security concerns.
-
-    </details>
-
-54. A developer is using AWS Amplify Hosting to build and deploy an application. The developer is receiving an increased number of bug reports from users. The developer wants to add end-to-end testing to the application to eliminate as many bugs as possible before the bugs reach production. Which solution should the developer implement to meet these requirements?
-    - [ ] A. Run the amplify add test command in the Amplify CLI.
-    - [ ] B. Create unit tests in the application. Deploy the unit tests by using the amplify push command in the Amplify CLI.
-    - [ ] C. Add a test phase to the amplify.yml build settings for the application.
-    - [ ] D. Add a test phase to the aws-exports.js file for the application.
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
-
-    </details>
-
-55. An ecommerce company is using an AWS Lambda function behind Amazon API Gateway as its application tier. To process orders during checkout, the application calls a POST API from the frontend. The POST API invokes the Lambda function asynchronously. In rare situations, the application has not processed orders. The Lambda application logs show no errors or failures. What should a developer do to solve this problem?
-    - [ ] A. Inspect the frontend logs for API failures. Call the POST API manually by using the requests from the log file.
-    - [ ] B. Create and inspect the Lambda dead-letter queue. Troubleshoot the failed functions. Reprocess the events.
-    - [ ] C. Inspect the Lambda logs in Amazon CloudWatch for possible errors. Fix the errors.
-    - [ ] D. Make sure that caching is disabled for the POST API in API Gateway.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-       The POST API invokes the Lambda function asynchronously.
-       1. In rare situations, the application has not processed orders.
-       2. Lambda application logs show no errors or failures.
-       3. Given this, it suggests that the Lambda function might have encountered an error when trying to process the event, but this error hasn't been captured or handled in the logs. When Lambda is invoked asynchronously and it encounters an error that prevents the function from processing the event, AWS Lambda can be set up to send the event to a dead-letter queue (DLQ) for further analysis.
-       Let's evaluate the options:
-       - A. If the Lambda logs show no errors, and given that the issue is with order processing in the backend, inspecting frontend logs might not provide much insight into the Lambda processing issue.
-       - B. A dead-letter queue (DLQ) captures unprocessed events caused by any error when a Lambda function is invoked asynchronously. If a Lambda function is set up with a DLQ, you can determine the cause of an error by inspecting the DLQ. This approach allows for troubleshooting and reprocessing events.
-       - C. The problem statement already mentioned that the Lambda application logs show no errors or failures, so revisiting the Lambda logs may not be productive.
-       - D. Caching for POST API requests is not typical. POST requests usually entail changing data or state on the server-side, and it's not recommended to cache such requests. However, while this is a best practice, it doesn't directly address the issue described.
-
-    </details>
-
-56. A company is building a web application on AWS. When a customer sends a request, the application will generate reports and then make the reports available to the customer within one hour. Reports should be accessible to the customer for 8 hours. Some reports are larger than 1 MB. Each report is unique to the customer. The application should delete all reports that are older than 2 days. Which solution will meet these requirements with the LEAST operational overhead?
-    - [ ] A. Generate the reports and then store the reports as Amazon DynamoDB items that have a specified TTL. Generate a URL that retrieves the reports from DynamoDB. Provide the URL to customers through the web application.
-    - [ ] B. Generate the reports and then store the reports in an Amazon S3 bucket that uses server-side encryption. Attach the reports to an Amazon Simple Notification Service (Amazon SNS) message. Subscribe the customer to email notifications from Amazon SNS.
-    - [ ] C. Generate the reports and then store the reports in an Amazon S3 bucket that uses server-side encryption. Generate a presigned URL that contains an expiration date Provide the URL to customers through the web application. Add S3 Lifecycle configuration rules to the S3 bucket to delete old reports.
-    - [ ] D. Generate the reports and then store the reports in an Amazon RDS database with a date stamp. Generate an URL that retrieves the reports from the RDS database. Provide the URL to customers through the web application. Schedule an hourly AWS Lambda function to delete database records that have expired date stamps.
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
-       - A: DynamoDB cannot store object larger than 400K
-       - B: SNS cannot send email with attachment
-       - D: The nature or format of the report is not specified, however RDS doent look like a great place to store large document file. Also generating a url to the reports from the RDS database requires some work while it is a native capabilities in S3
-
-    </details>
-
-57. A company has deployed an application on AWS Elastic Beanstalk. The company has configured the Auto Scaling group that is associated with the Elastic Beanstalk environment to have five Amazon EC2 instances. If the capacity is fewer than four EC2 instances during the deployment, application performance degrades. The company is using the all-at-once deployment policy. What is the MOST cost-effective way to solve the deployment issue?
-    - [ ] A. Change the Auto Scaling group to six desired instances.
-    - [ ] B. Change the deployment policy to traffic splitting. Specify an evaluation time of 1 hour.
-    - [ ] C. Change the deployment policy to rolling with additional batch. Specify a batch size of 1.
-    - [ ] D. Change the deployment policy to rolling. Specify a batch size of 2.
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
-       - A. Changing the Auto Scaling group to have six desired instances might increase the number of running instances permanently, even if they aren't needed all the time, leading to higher costs.
-       - B. The traffic splitting deployment policy works by shifting traffic to the new version in increments. Specifying an evaluation time of 1 hour could potentially expose the new version to a significant portion of the traffic before fully determining its stability. It doesn't guarantee the maintenance of a minimum number of healthy instances.
-       - C. The rolling with an additional batch deployment policy launches new instances for every batch, ensuring that you always have the required number of instances running, and then replaces the old ones. If we specify a batch size of 1, it means one instance will be added (total becomes 6), deployed, and once successful, one of the older instances will be terminated, bringing the total back to 5. This method ensures that you never go below the required capacity during deployment.
-       - D. The rolling deployment policy works by taking instances out of service, updating them, and then returning them to service. If you specify a batch size of 2, it means that 2 instances will be taken out of service for the deployment. Given the scenario, this would reduce the capacity to 3 instances during deployment, which would degrade application performance.
-
-    </details>
-
-58. A developer is incorporating AWS X-Ray into an application that handles personal identifiable information (PII). The application is hosted on Amazon EC2 instances. The application trace messages include encrypted PII and go to Amazon CloudWatch. The developer needs to ensure that no PII goes outside of the EC2 instances. Which solution will meet these requirements?
-    - [ ] A. Manually instrument the X-Ray SDK in the application code.
-    - [ ] B. Use the X-Ray auto-instrumentation agent.
-    - [ ] C. Use Amazon Macie to detect and hide PII. Call the X-Ray API from AWS Lambda.
-    - [ ] D. Use AWS Distro for Open Telemetry.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-       By manually instrumenting the X-Ray SDK in the application code, the developer can have full control over which data is included in the trace messages. This way, the developer can ensure that no PII is sent to X-Ray by carefully handling the PII within the application and not including it in the trace messages.
-
-    </details>
-
-59. A developer is migrating some features from a legacy monolithic application to use AWS Lambda functions instead. The application currently stores data in an Amazon Aurora DB cluster that runs in private subnets in a VPC. The AWS account has one VPC deployed. The Lambda functions and the DB cluster are deployed in the same AWS Region in the same AWS account. The developer needs to ensure that the Lambda functions can securely access the DB cluster without crossing the public internet. Which solution will meet these requirements?
-    - [ ] A. Configure the DB cluster's public access setting to Yes.
-    - [ ] B. Configure an Amazon RDS database proxy for he Lambda functions.
-    - [ ] C. Configure a NAT gateway and a security group for the Lambda functions.
-    - [ ] D. Configure the VPC, subnets, and a security group for the Lambda functions.
-
-    <details>
-       <summary>Answer</summary>
-
-       D.
-
-    </details>
-
-60. A developer is building a new application on AWS. The application uses an AWS Lambda function that retrieves information from an Amazon DynamoDB table. The developer hard coded the DynamoDB table name into the Lambda function code. The table name might change over time. The developer does not want to modify the Lambda code if the table name changes. Which solution will meet these requirements MOST efficiently?
-
-    - [ ] A. Create a Lambda environment variable to store the table name. Use the standard method for the programming language to retrieve the variable.
-    - [ ] B. Store the table name in a file. Store the file in the /tmp folder. Use the SDK for the programming language to retrieve the table name.
-    - [ ] C. Create a file to store the table name. Zip the file and upload the file to the Lambda layer. Use the SDK for the programming language to retrieve the table name.
-    - [ ] D. Create a global variable that is outside the handler in the Lambda function to store the table name.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-
-    </details>
-
-61. A company has a critical application on AWS. The application exposes an HTTP API by using Amazon API Gateway. The API is integrated with an AWS Lambda function. The application stores data in an Amazon RDS for MySQL DB instance with 2 virtual CPUs (vCPUs) and 64 GB of RAM. Customers have reported that some of the API calls return HTTP 500 Internal Server Error responses. Amazon CloudWatch Logs shows errors for “too many connections.” The errors occur during peak usage times that are unpredictable. The company needs to make the application resilient. The database cannot be down outside of scheduled maintenance hours. Which solution will meet these requirements?
-    - [ ] A. Decrease the number of vCPUs for the DB instance. Increase the max_connections setting.
-    - [ ] B. Use Amazon RDS Proxy to create a proxy that connects to the DB instance. Update the Lambda function to connect to the proxy.
-    - [ ] C. Add a CloudWatch alarm that changes the DB instance class when the number of connections increases to more than 1,000.
-    - [ ] D. Add an Amazon EventBridge rule that increases the max_connections setting of the DB instance when CPU utilization is above 75%.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-       Amazon RDS Proxy is designed to improve the application's scalability and resilience by pooling and sharing connections to the database. By using RDS Proxy, the Lambda functions would make connections to the proxy, which would handle and efficiently manage the actual connections to the RDS instance. This would likely alleviate the "too many connections" error during peak times.
-
-    </details>
-
-62. A company has installed smart meters in all its customer locations. The smart meters measure power usage at 1-minute intervals and send the usage readings to a remote endpoint for collection. The company needs to create an endpoint that will receive the smart meter readings and store the readings in a database. The company wants to store the location ID and timestamp information. The company wants to give its customers low-latency access to their current usage and historical usage on demand. The company expects demand to increase significantly. The solution must not impact performance or include downtime while scaling. Which solution will meet these requirements MOST cost-effectively?
-    - [ ] A. Store the smart meter readings in an Amazon RDS database. Create an index on the location ID and timestamp columns. Use the columns to filter on the customers' data.
-    - [ ] B. Store the smart meter readings in an Amazon DynamoDB table. Create a composite key by using the location ID and timestamp columns. Use the columns to filter on the customers' data.
-    - [ ] C. Store the smart meter readings in Amazon ElastiCache for Redis. Create a SortedSet key by using the location ID and timestamp columns. Use the columns to filter on the customers' data.
-    - [ ] D. Store the smart meter readings in Amazon S3. Partition the data by using the location ID and timestamp columns. Use Amazon Athena to filter on the customers' data.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-
-    </details>
-
-63. A company is building a serverless application that uses AWS Lambda functions. The company needs to create a set of test events to test Lambda functions in a development environment. The test events will be created once and then will be used by all the developers in an IAM developer group. The test events must be editable by any of the IAM users in the IAM developer group. Which solution will meet these requirements?
-    - [ ] A. Create and store the test events in Amazon S3 as JSON objects. Allow S3 bucket access to all IAM users.
-    - [ ] B. Create the test events. Configure the event sharing settings to make the test events shareable.
-    - [ ] C. Create and store the test events in Amazon DynamoDB. Allow access to DynamoDB by using IAM roles.
-    - [ ] D. Create the test events. Configure the event sharing settings to make the test events private.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-       There is an option in lambda console to share the event with other users.
-
-    </details>
-
-64. A developer is configuring an application's deployment environment in AWS CodePipeline. The application code is stored in a GitHub repository. The developer wants to ensure that the repository package's unit tests run in the new deployment environment. The developer has already set the pipeline's source provider to GitHub and has specified the repository and branch to use in the deployment. Which combination of steps should the developer take next to meet these requirements with the LEAST overhead? (Choose two.)
-    - [ ] A. Create an AWS CodeCommit project. Add the repository package's build and test commands to the project's buildspec.
-    - [ ] B. Create an AWS CodeBuild project. Add the repository package's build and test commands to the project's buildspec.
-    - [ ] C. Create an AWS CodeDeploy project. Add the repository package's build and test commands to the project's buildspec.
-    - [ ] D. Add an action to the source stage. Specify the newly created project as the action provider. Specify the build artifact as the action's input artifact.
-    - [ ] E. Add a new stage to the pipeline after the source stage. Add an action to the new stage. Specify the newly created project as the action provider. Specify the source artifact as the action's input artifact.
-
-    <details>
-       <summary>Answer</summary>
-
-       BE.
-
-    </details>
-
-65. An engineer created an A/B test of a new feature on an Amazon CloudWatch Evidently project. The engineer configured two variations of the feature (Variation A and Variation B) for the test. The engineer wants to work exclusively with Variation A. The engineer needs to make updates so that Variation A is the only variation that appears when the engineer hits the application's endpoint. Which solution will meet this requirement?
-    - [ ] A. Add an override to the feature. Set the identifier of the override to the engineer's user ID. Set the variation to Variation A.
-    - [ ] B. Add an override to the feature. Set the identifier of the override to Variation A. Set the variation to 100%.
-    - [ ] C. Add an experiment to the project. Set the identifier of the experiment to Variation B. Set the variation to 0%.
-    - [ ] D. Add an experiment to the project. Set the identifier of the experiment to the AWS account's account ISet the variation to Variation A.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-       (Optional) To specify that certain users always see a certain variation, choose Overrides, Add override. Then, specify a user by entering their user ID, account ID, or some other identifier in Identifier, and specify which variation they should see. This can be useful for members of your own testing team or other internal users when you want to make sure they see a specific variation. The sessions of users who are assigned overrides do not contribute to launch or experiment metrics. You can repeat this for as many as 10 users by choosing Add override again.
-
-    </details>
-
-66. A development team wants to build a continuous integration/continuous delivery (CI/CD) pipeline. The team is using AWS CodePipeline to automate the code build and deployment. The team wants to store the program code to prepare for the CI/CD pipeline. Which AWS service should the team use to store the program code?
-    - [ ] A. AWS CodeDeploy
-    - [ ] B. AWS CodeArtifact
-    - [ ] C. AWS CodeCommit
-    - [ ] D. Amazon CodeGuru
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
-
-    </details>
-
-67. A developer is working on a serverless application that needs to process any changes to an Amazon DynamoDB table with an AWS Lambda function. How should the developer configure the Lambda function to detect changes to the DynamoDB table?
-    - [ ] A. Create an Amazon Kinesis data stream, and attach it to the DynamoDB table. Create a trigger to connect the data stream to the Lambda function.
-    - [ ] B. Create an Amazon EventBridge rule to invoke the Lambda function on a regular schedule. Conned to the DynamoDB table from the Lambda function to detect changes.
-    - [ ] C. Enable DynamoDB Streams on the table. Create a trigger to connect the DynamoDB stream to the Lambda function.
-    - [ ] D. Create an Amazon Kinesis Data Firehose delivery stream, and attach it to the DynamoDB table. Configure the delivery stream destination as the Lambda function.
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
-
-    </details>
-
-68. A developer has a legacy application that is hosted on-premises. Other applications hosted on AWS depend on the on-premises application for proper functioning. In case of any application errors, the developer wants to be able to use Amazon CloudWatch to monitor and troubleshoot all applications from one place. How can the developer accomplish this?
-    - [ ] A. Install an AWS SDK on the on-premises server to automatically send logs to CloudWatch.
-    - [ ] B. Download the CloudWatch agent to the on-premises server. Configure the agent to use IAM user credentials with permissions for CloudWatch.
-    - [ ] C. Upload log files from the on-premises server to Amazon S3 and have CloudWatch read the files.
-    - [ ] D. Upload log files from the on-premises server to an Amazon EC2 instance and have the instance forward the logs to CloudWatch.
-
-    <details>
-       <summary>Answer</summary>
-
-       B.
-
-    </details>
-
-69. An Amazon Kinesis Data Firehose delivery stream is receiving customer data that contains personally identifiable information. A developer needs to remove pattern-based customer identifiers from the data and store the modified data in an Amazon S3 bucket. What should the developer do to meet these requirements?
-    - [ ] A. Implement Kinesis Data Firehose data transformation as an AWS Lambda function. Configure the function to remove the customer identifiers. Set an Amazon S3 bucket as the destination of the delivery stream.
-    - [ ] B. Launch an Amazon EC2 instance. Set the EC2 instance as the destination of the delivery stream. Run an application on the EC2 instance to remove the customer identifiers. Store the transformed data in an Amazon S3 bucket.
-    - [ ] C. Create an Amazon OpenSearch Service instance. Set the OpenSearch Service instance as the destination of the delivery stream. Use search and replace to remove the customer identifiers. Export the data to an Amazon S3 bucket.
-    - [ ] D. Create an AWS Step Functions workflow to remove the customer identifiers. As the last step in the workflow, store the transformed data in an Amazon S3 bucket. Set the workflow as the destination of the delivery stream.
-
-    <details>
-       <summary>Answer</summary>
-
-       A.
-
-    </details>
-
-70. An application uses Lambda functions to extract metadata from files uploaded to an S3 bucket; the metadata is stored in Amazon DynamoDB. The application starts behaving unexpectedly, and the developer wants to examine the logs of the Lambda function code for errors. Based on this system configuration, where would the developer find the logs?
-    - [ ] A. Amazon S3
-    - [ ] B. AWS CloudTrail
-    - [ ] C. Amazon CloudWatch
-    - [ ] D. Amazon DynamoDB
-
-    <details>
-       <summary>Answer</summary>
-
-       C.
+       BD.
 
     </details>
