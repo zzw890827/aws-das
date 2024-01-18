@@ -180,6 +180,10 @@
        <summary>Answer</summary>
 
        A.
+       - A.  The choice of ORC aligns well with large-scale analytical workloads due to its efficient read and compression capabilities. Partitioning by date is particularly effective for this use case, as it directly supports the company's pattern of analyzing the most recent 24 hours of data and historical logs. While sorting by source IP might not be universally optimal, it can still benefit certain types of queries, especially those focusing on specific source IPs. This approach provides a good balance of query performance, storage efficiency, and alignment with the company's analysis patterns.
+       - B. CSV is not an optimal format for read-heavy analytical workloads compared to columnar formats like ORC or Parquet.
+       - C. Apache Parquet is another efficient columnar storage format, similar to ORC, and is well-suited for analytical queries but partitioning by source IP might result in a large number of partitions, given the high number of unique IPs, which could lead to partitioning overhead.
+       - D. JSON is not as efficient as ORC or Parquet for large-scale analytical queries.
 
     </details>
 
@@ -194,6 +198,11 @@
        <summary>Answer</summary>
 
        AC.
+       - A. Setting up a trusted connection with an HSM requires both client and server certificates. This step ensures a secure connection between the Redshift cluster and the HSM. The automatic key rotation is a part of complying with the security standards for managing encryption keys.
+       - B. This option isn’t feasible because existing Amazon Redshift clusters cannot be modified to add HSM encryption; a new cluster must be created instead.
+       - C. Amazon Redshift does not support enabling encryption on an existing cluster. To encrypt the data using HSM, the company must create a new Redshift cluster with HSM encryption enabled and then migrate their data from the unencrypted cluster to the new encrypted one.
+       - D. While the AWS CLI can be used for various configurations, enabling HSM encryption on an existing Redshift cluster is not possible; a new cluster needs to be created.
+       - E. CDHE is a method for secure key exchange and not directly related to the requirement of encrypting the data at rest using HSM in Amazon Redshift.
 
     </details>
 
@@ -206,6 +215,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. Setting up and optimizing EMR and Spark might require more effort and expertise.
+       - B. Performing ETL on-premises adds an extra step and may slow down the process.
+       - C. It leverages AWS DMS for efficient data ingestion into S3 and uses AWS Glue, a serverless data integration service, to perform the necessary data curation steps. This approach minimizes the setup and management overhead and benefits from tight integration between AWS services, likely leading to a quicker and smoother data curation process for ML purposes.
+       - D. This process is likely slower due to physical shipping.
 
     </details>
 
@@ -218,6 +231,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. This approach involves significant data duplication and management overhead. It doesn't provide real-time access to the data, as the snapshot is a point-in-time copy.
+       - B. Amazon QuickSight does not support VPC endpoints for connecting to Redshift. QuickSight accesses Redshift through public internet or via an Elastic Network Interface (ENI) in the VPC where Redshift resides.
+       - C. Amazon QuickSight does not currently support direct cross-region Redshift connectivity simply by specifying the region in the connection string.
+       - D. This method allows QuickSight to access Redshift over the public internet, with security group rules ensuring controlled access.
 
     </details>
 
@@ -230,6 +247,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. Requires additional effort to set up and maintain the Lambda function and the ETL scripts.
+       - B. Similar to Option A, it involves exporting data out of Redshift, which might not be efficient.
+       - C. Redshift Spectrum allows querying data directly in S3 without loading it into Redshift, thus minimizing the load on the cluster. This approach is managed and requires minimal additional setup or development. It leverages the existing AWS Glue Data Catalog.
+       - D. EMR is not a serverless solution; it requires cluster management and is not as straightforward to set up compared to other options.
 
     </details>
 
@@ -243,6 +264,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. While QuickSight needs permissions to access the AWS Glue Data Catalog, if the catalog was already being used for other data sources without issues, it's unlikely that this is the problem.
+       - B. This is the most likely solution. QuickSight needs explicit permissions to access each S3 bucket used as a data source. If the new application's data is stored in a separate S3 bucket, QuickSight needs permissions to access this specific bucket.
+       - C. Permissions for QuickSight to access the Glue Data Catalog are not managed within the AWS Glue console.
+       - D. While S3 bucket permissions are important, QuickSight-specific permissions are typically managed within the QuickSight console, not the S3 console.
 
     </details>
 
@@ -256,6 +281,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. Developing and maintaining a custom application using KCL adds complexity and potentially higher costs in terms of development and maintenance.
+       - B. It utilizes Kinesis Data Analytics, which supports SQL-like queries for analyzing trends, aligning with the data scientists’ skills. AWS Lambda can be configured to handle notifications based on the analysis results, and Amazon SNS can be used for sending those notifications. Finally, Kinesis Data Firehose efficiently handles the persistence of data to an S3 bucket for archival and historical re-processing. This option strikes a balance between meeting the technical requirements and minimizing complexity and cost, utilizing fully managed AWS services.
+       - C. Having two Kinesis data streams can add unnecessary complexity and cost without providing significant benefits for the described use case.
+       - D. Using a custom KCL application adds complexity and maintenance overhead. Two streams add complexity and potential cost.
 
     </details>
 
@@ -269,6 +298,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. DMS is not required to migrate data from one region to another. It can even be used to migrate data from an S3 bucket to another bucket in another account, but there are better and cheaper ways to do this (considering the volume of data, of course).
+       - B. It is the correct alternative. Glue crawlers can catalog data that is in different regions. It's simple to set up and not expensive.
+       - C. Cross-region works for data replication, but it will be duplicated unnecessarily.
+       - D. This type of permissions is best suited for LakeFormation and would not help catalog data that is in different regions.
 
     </details>
 
@@ -282,6 +315,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. Doesn't specifically address acceleration of the COPY command itself in terms of performance optimization.
+       - B. y splitting the files to align with the number of slices in the Redshift cluster and uploading them to S3, the COPY command can leverage parallel processing more effectively. This alignment ensures that each slice can work on loading data simultaneously, thus speeding up the overall process.
+       - C. The number of compute nodes is not as relevant as the number of slices for optimizing the COPY command, as Redshift's performance is more slice-bound than node-bound for data loading.
+       - D. While this can improve query performance, it might not necessarily accelerate the COPY process itself, depending on the existing data distribution and query patterns.
 
     </details>
 
@@ -294,6 +331,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. DISTSTYLE ALL for the customers table might not be optimal if it's a large table, especially since it frequently changes, leading to potential replication overhead.
+       - B. If there are common queries joining the trips table on the destination, DISTSTYLE EVEN might not be as efficient as DISTSTYLE KEY.
+       - C. t uses DISTSTYLE KEY for the trips table, aligning with the need to analyze trip details by destination, and sorts it by date, which is another key aspect of the analysis. This option also wisely chooses DISTSTYLE EVEN for the customers table, which is better suited for larger, frequently changing tables, and DISTSTYLE ALL for the drivers table, which is appropriate for smaller, infrequently changing dimension tables. This combination should offer optimal query performance for the described use case and data characteristics.
+       - D. DISTSTYLE ALL for large fact tables can lead to unnecessary replication and performance issues, especially for the customers table which frequently changes.
 
     </details>
 
