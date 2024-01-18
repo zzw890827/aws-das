@@ -333,7 +333,7 @@
        C.
        - A. DISTSTYLE ALL for the customers table might not be optimal if it's a large table, especially since it frequently changes, leading to potential replication overhead.
        - B. If there are common queries joining the trips table on the destination, DISTSTYLE EVEN might not be as efficient as DISTSTYLE KEY.
-       - C. t uses DISTSTYLE KEY for the trips table, aligning with the need to analyze trip details by destination, and sorts it by date, which is another key aspect of the analysis. This option also wisely chooses DISTSTYLE EVEN for the customers table, which is better suited for larger, frequently changing tables, and DISTSTYLE ALL for the drivers table, which is appropriate for smaller, infrequently changing dimension tables. This combination should offer optimal query performance for the described use case and data characteristics.
+       - C. It uses DISTSTYLE KEY for the trips table, aligning with the need to analyze trip details by destination, and sorts it by date, which is another key aspect of the analysis. This option also wisely chooses DISTSTYLE EVEN for the customers table, which is better suited for larger, frequently changing tables, and DISTSTYLE ALL for the drivers table, which is appropriate for smaller, infrequently changing dimension tables. This combination should offer optimal query performance for the described use case and data characteristics.
        - D. DISTSTYLE ALL for large fact tables can lead to unnecessary replication and performance issues, especially for the customers table which frequently changes.
 
     </details>
