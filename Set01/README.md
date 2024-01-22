@@ -348,6 +348,9 @@
        <summary>Answer</summary>
 
        B.
+       - A. Add IAM roles to EMR's EC2 trust policy: This isn't the usual method. Typically, the EMR service role is added to the trust policy of the IAM roles, not the other way around.
+       - B. Add service role for EMR EC2 to the trust policies for the additional IAM roles: This is the correct approach, as the EMR service role should assume these IAM roles.
+       - C, D: Add service role for EMR EC2 to the trust policies for the additional IAM roles: This is the correct approach, as the EMR service role should assume these IAM roles.
 
     </details>
 
@@ -363,6 +366,12 @@
        <summary>Answer</summary>
 
        ACE.
+       - AWS Glue Data Catalog (Option A): This serves as a centralized metadata repository for all your data assets, regardless of where they are located. It supports metadata management and federation for access control, which is a key requirement. It is also compatible with many data processing tools like Apache Spark and Athena.
+       - Amazon EMR with Apache Spark for ETL (Option B): While EMR with Spark provides powerful processing capabilities for ETL with PySpark and Scala, as you correctly pointed out, it does come with more operational overhead compared to fully managed services.
+       - AWS Glue for Scala-based ETL (Option C): AWS Glue is a fully managed ETL service that can handle Scala scripts. However, it might be more limited in operational flexibility compared to EMR with Apache Spark, especially if there's a need for more customized or complex ETL workflows.
+       - Amazon EMR with Apache Hive for JDBC clients (Option D): EMR with Apache Hive can provide JDBC support for legacy clients. Hive on EMR can serve as an effective solution for enabling JDBC connectivity to data stored in S3.
+       - Amazon Athena for querying data in Amazon S3 using JDBC drivers (Option E): Athena allows SQL querying of data in S3 and supports JDBC connections. It is serverless, so operational management is minimal, and it can be integrated with the AWS Glue Data Catalog.
+       - Amazon EMR with Apache Hive, using an Amazon RDS with MySQL-compatible backed metastore (Option F): This setup would provide an external metastore for Hive on EMR, which can offer advantages in some scenarios but may add additional operational complexity.
 
     </details>
 
@@ -376,6 +385,9 @@
        <summary>Answer</summary>
 
        A.
+       - A. Option A is the most suitable solution. It combines the benefits of compression, partitioning, and converting to a columnar data format, which are all best practices for optimizing Athena query performance and cost. The defined lifecycle policies effectively balance the need for data availability and cost optimization, with raw data moved to Glacier for long-term, cost-effective storage, and processed data moved to S3 Standard-IA after it becomes infrequently accessed. This approach should meet the requirements for query performance, data retention, and cost optimization.
+       - B. Partitioning improves query efficiency but using a row-based format may not be as cost-effective as a columnar format for Athena queries.
+       - C, D. The lifecycle policy based on last access may keep data in a higher-cost storage class longer than necessary, especially for data that is not accessed frequently but not old enough to be moved to S3-IA.
 
     </details>
 
@@ -389,6 +401,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. EMR with Spark Streaming for Processing: Provides robust stream processing capabilities. However, managing an EMR cluster requires more operational overhead, and scaling may not be as immediate as other serverless options.
+       - B. RDS for Data Storage: While RDS is a managed service, it might introduce latency and complexity in the solution, especially when dealing with high-velocity real-time data. Managing the scaling and IOPS for RDS can also add overhead.
+       - C. Lambda for Event Detection: Can be used for real-time processing and is serverless, but integrating complex event detection logic within the constraints of Lambda might be challenging, especially for sequence detection within a timeframe.
+       - D. t leverages Amazon Kinesis Data Streams for real-time data ingestion and Kinesis Data Analytics for processing and pattern detection, which is crucial for identifying the sequence of voltage changes. AWS Lambda can then be used to send alerts to the SNS topic. This solution is fully managed, highly available, and can automatically scale, aligning well with the company's needs for real-time alerting in a growing network of cities.
 
     </details>
 
@@ -401,7 +417,11 @@
     <details>
        <summary>Answer</summary>
 
-       C.
+       D.
+       - A. Read Replica for Recent Data: Creating a read replica of the RDS database for the most recent 6 months of data may not be the most efficient solution, as RDS is generally used for transactional workloads rather than analytics.
+       - B. Read Replica for Historical Data: As with Option A, using a read replica for historical data may not be optimal for analytics. Additionally, joining data across Redshift and RDS can be complex and inefficient.
+       - C. AWS Glue Data Catalog and Athena: Using Athena for querying is a good choice for analytics. However, this option does not specify how the most recent data (which is queried more frequently) is managed differently for performance optimization.
+       - D. Incremental Copy to S3 with Redshift for Recent Data: Storing historical data in S3 and keeping the recent 6 months in Redshift is an effective approach. Redshift offers excellent performance for frequent queries on the recent data. Redshift Spectrum for Historical Data: Using Redshift Spectrum to query historical data in S3 directly from Redshift is efficient and allows for easy joining with the recent data stored in Redshift.
 
     </details>
 
@@ -444,6 +464,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. This approach focuses on data storage in S3. While creating separate buckets and applying specific bucket policies can control access to the data, it doesn't directly address the separation of query execution and history in Athena.
+       - B. Athena workgroups are used to separate query execution and control cost. By creating a workgroup for each use case, you can segregate query execution and history. Applying tags and using IAM policies based on these tags can enforce appropriate permissions. This approach aligns well with the requirement to separate query execution and history based on different use cases within the same AWS account.
+       - C. While creating different IAM roles with specific permissions can provide access control, it doesn't inherently segregate query execution and history in Athena. IAM roles are more about granting users or services the necessary permissions to perform actions in Athena, rather than separating the query environment.
+       - D. AWS Glue Data Catalog resource policies can control access to metadata for tables and databases. However, this approach primarily focuses on access to the metadata rather than the segregation of Athena query execution and history.
 
     </details>
 
@@ -457,6 +481,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. AWS Glue ML Transform can be used for ML tasks, but it's more focused on ETL transformations rather than specific ML algorithms like Random Cut Forest (RCF). Amazon QuickSight is excellent for visualization, but this combination may require some technical oversight for setting up and managing the ML transforms in Glue.
+       - B. Using Amazon QuickSight for visualization and leveraging its ML-powered forecasting capabilities, seems to be the best fit. It offers an out-of-the-box, user-friendly solution with minimal management overhead, ideal for a non-technical team. QuickSight's built-in ML features can handle tasks like forecasting and trend detection without the need for deep technical expertise in machine learning or data science.
+       - C. This approach requires managing an EC2 instance and the ML model, which could be complex and time-consuming for a non-technical team.
+       - D. This option is more suited for simple analyses and may not fully leverage ML capabilities like RCF for complex tasks such as seasonality detection or outlier exclusion.
 
     </details>
 
@@ -470,6 +498,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. This approach involves segregating the data into different S3 buckets or prefixes based on the product. While S3 bucket policies can control access to the data at the S3 level, they do not directly control what data is visible within a QuickSight dashboard.
+       - B. Similar to option A, this involves separating the data by product. IAM policies can control access to AWS resources, but like S3 bucket policies, they do not provide a method to control data visibility within QuickSight dashboards.
+       - C. Row-level security in QuickSight allows you to control access to data at the row level within a dataset. However, QuickSight’s row-level security is not typically implemented via a manifest file. Manifest files in QuickSight are generally used for defining data sets, especially when importing data from S3.
+       - D. This option involves applying row-level security (RLS) directly to datasets in QuickSight. RLS enables the data analytics team to specify which rows of data a user or group of users can access within a dataset. By setting up dataset rules, the team can ensure that each product owner only sees the data relevant to their products.
 
     </details>
 
@@ -483,6 +515,10 @@
        <summary>Answer</summary>
 
        A.
+       - A. This option uses AWS Lambda to create an EMR cluster, execute the Hive script, and then automatically terminate the cluster. By setting KeepJobFlowAliveWhenNoSteps to false, the cluster will shut down once the script completes, ensuring that you only pay for the cluster while it's active. The use of Lambda and CloudWatch Events for scheduling provides a high degree of control over when the job runs and allows for the cluster to be fully terminated between runs, which can be more cost-effective for daily batch jobs.
+       - B. While the use of Spot Instances can be cost-effective, leaving the cluster running continuously (due to the termination protection flag) could lead to higher costs, especially if the cluster is underutilized outside the execution time of the daily job.
+       - C.  While AWS Glue is a fully managed ETL service that can be highly cost-effective for certain use cases, it does not operate on a bring-up-and-tear-down model like an Amazon EMR cluster. In Glue, you define jobs and triggers, and the underlying resources are managed by AWS. However, you don't have the same level of control over starting and stopping the underlying infrastructure as you do with EMR. This can impact cost, particularly if you need to run jobs infrequently and prefer not to have resources allocated when they are not in use.
+       - D. As previously mentioned, this option faces challenges with the execution time limits of AWS Lambda and may not be feasible for a 30-minute Hive script.
 
     </details>
 
@@ -496,6 +532,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. Using INSERT statements to ingest large amounts of data into Amazon Redshift is not efficient. INSERT is suitable for loading small amounts of data, but for large volumes, it's slow and resource-intensive.
+       - B. Splitting large .csv files and then using the COPY command to load data into Amazon Redshift, is the most effective solution for improving data loading performance. This approach leverages Redshift's optimized data loading capabilities and can handle the large daily data volume efficiently.
+       - C. It's an efficient way to ingest data, especially if the data is generated continuously or in real-time. However, for batch loading of .csv files stored in S3, it might not be the most straightforward solution compared to directly using the COPY command.
+       - D. Loading data in an unsorted order can initially be fast, but it may lead to suboptimal query performance due to data being unorganized.
 
     </details>
 
@@ -509,6 +549,10 @@
        <summary>Answer</summary>
 
        A.
+       - A. Concurrency scaling in Amazon Redshift automatically adds additional cluster capacity to handle increases in concurrent read-only queries. It's a cost-effective solution as you get an hour of concurrency scaling cluster time for free each day per main cluster. You're only charged for the concurrency scaling cluster time if it exceeds this amount. This solution is ideal for handling bursts in query activity without the need for manual intervention or permanent resizing of the cluster.
+       - B. Manually adding more nodes can increase query processing capacity, but it's less flexible and more time-consuming than automatic scaling solutions. Setting the distribution style to ALL can be beneficial for small reference tables but may not be suitable for all types of queries or tables, especially in a large data warehouse. This approach also requires manual intervention and can be less cost-effective as it involves maintaining a larger cluster size than necessary during non-peak hours.
+       - C. While this is a viable solution, it requires manual intervention to scale up and down, and you pay for the additional nodes as long as they are part of the cluster.
+       - D. It's a more disruptive and complex process compared to other options, and not necessarily more cost-effective. It could cause downtime or data synchronization issues and is generally not recommended for routine scaling purposes.
 
     </details>
 
@@ -551,6 +595,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. While you can specify settings to restrict public internet access, the effectiveness of this solution depends on analysts consistently using the correct security configuration when they launch their clusters.
+       - B. Manually checking the security group settings for each EMR cluster to ensure they don't allow public internet access (0.0.0.0/0 for IPv4, ::/0 for IPv6) is a way to ensure compliance. However, this approach is reactive and labor-intensive, requiring ongoing monitoring and doesn't prevent the creation of non-compliant clusters in the first place.
+       - C. Enabling the block public access setting at the account level is a proactive and comprehensive way to ensure that no EMR cluster in the account can be accessed from the public internet. This approach requires minimal effort once set up and applies to all current and future EMR clusters within the account, ensuring compliance without relying on individual users' actions.
+       - D. AWS WAF (Web Application Firewall) is primarily designed to protect web applications from common web exploits. While it could theoretically be configured to block public access to EMR clusters, it's not the most straightforward or intended tool for this specific use case.
 
     </details>
 
@@ -564,6 +612,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. Aurora can handle complex joins and aggregation queries, it may not be optimized for scenarios with a high volume of such operations, especially on large datasets.
+       - B. Amazon Redshift, is the most suitable and performant storage service for the specified requirements. Redshift is specifically designed for data warehousing and analytics workloads, making it ideal for handling large volumes of data with a high frequency of complex joins and aggregation queries. Its columnar storage and MPP architecture are particularly well-suited for querying large datasets and performing operations on a subset of columns efficiently.
+       - C. While it excels in scenarios where data is highly interconnected (like social networking, fraud detection, etc.), it is not designed for general-purpose data warehousing tasks like the ones described in your requirements.
+       - D. While Elasticsearch can handle aggregation queries, it is not primarily designed for data warehousing use cases involving complex joins and typical OLAP operations.
 
     </details>
 
