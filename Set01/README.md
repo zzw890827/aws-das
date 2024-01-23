@@ -629,6 +629,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. The process of copying data to a single folder might be time-consuming and doesn't leverage Redshift's ability to load data in parallel from multiple locations.
+       - B. Introduces significant complexity and additional cost by using Aurora and AWS Glue.
+       - C. Similar to option A, this adds complexity and may not be necessary.
+       - D. Enables parallel loading of data files from multiple S3 locations, which can significantly speed up the loading process. Does not require moving or altering the data files in S3, maintaining their segregation. Does not add significant cost, as it uses Redshift's built-in capabilities.
 
     </details>
 
@@ -642,6 +646,10 @@
        <summary>Answer</summary>
 
        A.
+       - A. Amazon ES is well-suited for real-time data analysis and can handle streaming data efficiently. Kibana offers powerful visualization capabilities and can work with near-real-time data.
+       - B. This setup might not support near-real-time analysis since it involves manual steps in SageMaker Jupyter notebooks.
+       - C. There might be a delay in data availability due to the data warehouse architecture, potentially affecting the near-real-time requirement.
+       - D. The process of data cataloging, querying with Athena, and then visualizing might introduce delays, potentially impacting the near-real-time requirement.
 
     </details>
 
@@ -655,6 +663,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. Since HDFS utilization is already low (never exceeds 10%), scaling based on CapacityRemainingGB might not be responsive to the actual performance bottleneck, which is more likely related to compute capacity rather than HDFS storage.
+       - B. Same as Option A regarding instance fleets.
+       - C. Similar to Option A, scaling based on CapacityRemainingGB might not effectively address the performance issue if the bottleneck is related to processing power rather than storage capacity.
+       - D. This approach focuses on scaling the cluster based on memory availability, which is a critical resource for query processing and is likely to have a more direct impact on improving query performance during peak times.
 
     </details>
 
@@ -668,6 +680,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. It requires changing the way data is stored, which might not be feasible for existing data.
+       - B. The performance issue described seems more related to listing S3 objects rather than the storage class's performance characteristics.
+       - C. EMRFS with consistent view uses DynamoDB to track S3 objects. Increasing RCUs can improve the performance of read operations, which includes listing S3 objects.
+       - D. Changing the Availability Zone is unlikely to affect the performance of listing objects in S3.
 
     </details>
 
@@ -681,6 +697,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. Simply changing from DynamicFrame to DataFrame won't inherently solve the issue of processing incremental data.
+       - B. This approach specifically addresses the challenge of processing only incremental data without requiring additional coding. Job bookmarks provide a built-in mechanism to keep track of which data has already been processed, thus ensuring that each subsequent job run only processes new or changed data. This option is not only efficient but also aligns well with the requirement of minimal coding effort.
+       - C. Requires significant coding effort and maintenance.
+       - D. Deleting data can be risky and might not be desirable or feasible in many scenarios.
 
     </details>
 
@@ -711,6 +731,10 @@
        <summary>Answer</summary>
 
        A.
+       - A. This approach directly supports incremental data loading, minimizing data transfer and processing requirements, and aligns well with the goal of scheduling daily transfers without unnecessarily reprocessing data that has already been ingested. It also avoids the additional overhead and complexity of managing external services or custom delta processing logic.
+       - B. Adds complexity and potential cost with the maintenance of an external system (DynamoDB) to track the state.
+       - C. Inefficient and costly as it involves ingesting the entire dataset daily and then computing the delta, which requires significant processing resources.
+       - D. Similar to Option C, this approach is inefficient for the requirement as it initially ingests the entire dataset.
 
     </details>
 
@@ -724,6 +748,10 @@
        <summary>Answer</summary>
 
        C.
+       - A. VPC Flow Logs are not designed to log database query activities or user-specific actions within Amazon Redshift.
+       - B. CloudTrail does not capture the internal database activities such as query execution or user-specific actions within the database.
+       - C. Redshift's audit logging feature is specifically designed to track and log the types of database activities mentioned in the requirements. It will capture all authentication attempts, connections, disconnections, and details about each query, including the user who executed it. This feature is essential for compliance purposes where detailed database usage tracking is required.
+       - D. It does not provide a mechanism to log specific database activities.
 
     </details>
 
@@ -737,6 +765,9 @@
        <summary>Answer</summary>
 
        C.
+       - A, B. Might increase the cost since Kinesis pricing is per shard.
+       - C. This approach ensures a more balanced distribution of data across the available shards, likely resolving the bottleneck without increasing costs or adding significant complexity to the setup. It leverages the existing shards more effectively by distributing the data from the larger number of sensors at Station A across both shards, rather than concentrating all of Station A's data into a single shard due to the common partition key.
+       - D. Reducing sensors could compromise the data collection quality and the purpose of monitoring.
 
     </details>
 
@@ -749,7 +780,11 @@
     <details>
        <summary>Answer</summary>
 
-       A.
+       B.
+       - A. Requires retrieving the data from Glacier to S3, incurring data retrieval costs and potential delays due to Glacier's retrieval times.
+       - B. This approach enables querying data directly within Glacier, avoiding the costs and time associated with retrieving the entire file to S3. While Glacier Select may have longer latency, it is likely acceptable given the monthly frequency of the task and the small size of the file.
+       - C. Similar to Option A, involves data retrieval costs and delays.
+       - D. Redshift Spectrum might be more than necessary for querying a single, small file and could incur higher costs compared to other options.
 
     </details>
 
@@ -763,6 +798,10 @@
        <summary>Answer</summary>
 
        D.
+       - A. Managing multiple COPY commands can be complex and might not be as efficient as other methods.
+       - B. Not a direct method for loading data into Redshift, and potentially less efficient than loading directly from S3.
+       - C. Manually managing data loading to align with cluster nodes can be complex and does not guarantee optimal resource use.
+       - D. The COPY command is specifically designed for efficiently loading large amounts of data into Redshift. It handles parallelism and distribution of data across the cluster's nodes and slices automatically, which optimizes resource usage and throughput. This approach is straightforward, reduces complexity, and is aligned with Amazon Redshift's best practices for data loading.
 
     </details>
 
@@ -792,7 +831,11 @@
     <details>
        <summary>Answer</summary>
 
-       A
+       A.
+       - A. Using AWS Glue to catalog the data, Athena for ad-hoc SQL-like queries, and QuickSight for visualization minimizes development effort and aligns with the need for infrequent analysis. This option is cost-effective and straightforward compared to the alternatives, which either introduce unnecessary complexity or incur higher costs for the stated requirements.
+       - B. Setup and maintenance of Amazon OpenSearch Service might involve more cost and complexity.
+       - C. Requires development effort to set up and maintain the Lambda function.
+       - D. Setting up and managing an EMR cluster and Spark jobs requires significant development and maintenance effort.
 
     </details>
 
@@ -806,11 +849,15 @@
        <summary>Answer</summary>
 
        C.
+       - A. Consolidating all accounts into one might not be feasible or desirable due to organizational, security, or billing reasons. Significant effort and potential risk involved in migrating all data and catalogs to a single account.
+       - B. Managing cross-account permissions and cataloging can be complex. Might not provide the most streamlined approach for fine-grained access control, particularly for column-level access.
+       - C. This approach avoids the complexities and potential risks associated with consolidating all accounts into one (Option A) and the data movement required in Option D. It also addresses the need for detailed access controls more directly than Option B, which might involve more complexity in managing cross-account permissions without the specific benefits of Lake Formation.
+       - D. Moving data to a central bucket can be a significant undertaking and may incur data transfer costs.
 
     </details>
 
 50. A company wants to improve user satisfaction for its smart home system by adding more features to its recommendation engine. Each sensor asynchronously pushes its nested JSON data into Amazon Kinesis Data Streams using the Kinesis Producer Library (KPL) in Java. Statistics from a set of failed sensors showed that, when a sensor is malfunctioning, its recorded data is not always sent to the cloud. The company needs a solution that offers near-real-time analytics on the data from the most updated sensors. Which solution enables the company to meet these requirements?
-    - [ ] A. Set the RecordMaxBufferedTime property of the KPL to "גˆ’1" to disable the buffering on the sensor side. Use Kinesis Data Analytics to enrich the data based on a company-developed anomaly detection SQL script. Push the enriched data to a fleet of Kinesis data streams and enable the data transformation feature to flatten the JSON file. Instantiate a dense storage Amazon Redshift cluster and use it as the destination for the Kinesis Data Firehose delivery stream.
+    - [ ] A. Set the RecordMaxBufferedTime property of the KPL to "1" to disable the buffering on the sensor side. Use Kinesis Data Analytics to enrich the data based on a company-developed anomaly detection SQL script. Push the enriched data to a fleet of Kinesis data streams and enable the data transformation feature to flatten the JSON file. Instantiate a dense storage Amazon Redshift cluster and use it as the destination for the Kinesis Data Firehose delivery stream.
     - [ ] B. Update the sensors code to use the PutRecord/PutRecords call from the Kinesis Data Streams API with the AWS SDK for Java. Use Kinesis Data Analytics to enrich the data based on a company-developed anomaly detection SQL script. Direct the output of KDA application to a Kinesis Data Firehose delivery stream, enable the data transformation feature to flatten the JSON file, and set the Kinesis Data Firehose destination to an Amazon OpenSearch Service (Amazon Elasticsearch Service) cluster.
     - [ ] C. Set the RecordMaxBufferedTime property of the KPL to "0" to disable the buffering on the sensor side. Connect for each stream a dedicated Kinesis Data Firehose delivery stream and enable the data transformation feature to flatten the JSON file before sending it to an Amazon S3 bucket. Load the S3 data into an Amazon Redshift cluster.
     - [ ] D. Update the sensors code to use the PutRecord/PutRecords call from the Kinesis Data Streams API with the AWS SDK for Java. Use AWS Glue to fetch and process data from the stream using the Kinesis Client Library (KCL). Instantiate an Amazon Elasticsearch Service cluster and use AWS Lambda to directly push data into it.
@@ -819,6 +866,10 @@
        <summary>Answer</summary>
 
        B.
+       - A. The use of dense storage Redshift cluster might be overkill for this use case and could lead to higher costs. Flattening JSON in Kinesis streams might add complexity.
+       - B.  It ensures immediate data transfer and leverages Kinesis Data Analytics for real-time processing and anomaly detection. Directing the output to Kinesis Data Firehose, which then sends data to Amazon OpenSearch Service (formerly Elasticsearch), allows for effective searching and visualization of the data. This option provides a balance of real-time data processing and powerful analytics capabilities without overly complex or costly infrastructure changes.
+       - C. Lacks the real-time analytics capabilities before the data reaches S3/Redshift.
+       - D. AWS Glue might not be the best tool for real-time streaming data processing.
 
     </details>
 
